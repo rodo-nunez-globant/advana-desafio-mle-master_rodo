@@ -1,7 +1,16 @@
 ---
-title: 0. Load Data
+title: Flight Delay Prediction
 jupyter: flight-delay-prediction
+format:
+  html:
+    theme: darkly
+    code-background: true
+    code-copy: true
+    toc: true
+    toc-depth: 3
 ---
+
+## 0. Load Data
 
 ```{python}
 import numpy as np
