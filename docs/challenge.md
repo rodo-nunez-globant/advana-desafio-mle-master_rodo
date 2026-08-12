@@ -14,4 +14,12 @@ After seting up my project structure, I usually start creating basic ADRs with i
 
 For more details, you can read my commit messages, I think they are clear enough to understand my reasoning. Here I will comment about some important changes or things that are not commiting changes.
 
+I removed the .ipynb to work only with Quarto Markdown (qmd). That improved reproducibility, flexibility and data protection (among other qualities).
+
 I removed the requierements.txt files, because we will use uv for managing environments. IMO is much better because of speed, information, easy to split dev versus prod, etc.
+
+I fixed some dependency problems and I defined an explicit python version for this project, with a `.python-version` file.
+
+I fixed some typos, and outdated syntax in the qmd. After that, I was able to run the qmd from end to end. I changes some formatting options to make it use a dark theme.
+
+I read the full qmd report (rendered to html), to understand the current status and what the DS found out.
