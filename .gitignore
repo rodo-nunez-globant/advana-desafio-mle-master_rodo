@@ -1,22 +1,119 @@
+# Python
 .venv/
+venv/
 **/__pycache__/
-*.pkl
-*.pickle
-*.png
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+*.so
+
+# Environment and dependencies
+.env
+.conda/
 **/dist/
 **/*.egg-info/
-**/.DS_Store/
-**/*.pyc
-*.conf
-build/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
 .DS_Store
-test-results
-**/.ipynb_checkpoints
-*.json
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Testing and coverage
 .coverage
 .coveragerc
+.pytest_cache/
+test-results/
+htmlcov/
+.tox/
+.nox/
+
+# SDD: Never commit outputs or data files
+*.pkl
+*.pickle
+*.joblib
+*.model
+*.h5
+*.csv
+*.json
+*.xml
+*.xlsx
+*.xls
+*.parquet
+*.feather
+*.hdf5
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.pdf
+*.html
+*.ipynb
+*.qmd.render/
+
+# Data directories
+data/raw/*
+data/processed/*
+data/external/*
+!data/raw/README.md
+!data/processed/README.md
+!data/external/README.md
+
+# Model artifacts
+models/*
+!models/README.md
+
+# Output directories
+outputs/*
+!outputs/README.md
+reports/*
+!reports/README.md
+
+# Logs
+*.log
+logs/
+*.out
+
+# Security
 secrets/
-.vscode
-.pytest_cache
+*.key
+*.pem
+*.crt
+*.p12
 insecure_report.txt
-reports
+
+# Build artifacts
+build/
+dist/
+
+# Jupyter checkpoints
+**/.ipynb_checkpoints/
+
+# Quarto
+_quarto/
+_quarto.yml
+_files/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.cache
+
+# Quarto
+
+*_files

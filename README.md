@@ -4,6 +4,61 @@
 
 Welcome to the **Software Engineer (ML & LLMs)** Application Challenge. In this, you will have the opportunity to get closer to a part of the reality of the role, and demonstrate your skills and knowledge in machine learning and cloud.
 
+## SDD Methodology
+
+This project follows **Spec-Driven Development (SDD)** methodology. The project constitution is located in `.sdd/constitution.md` and defines all technical decisions, boundaries, and requirements.
+
+### Project Structure
+
+The project has been enhanced with SDD-compliant structure while preserving the original challenge folders:
+
+```
+├── .sdd/                    # SDD methodology files
+│   ├── constitution.md      # Project constitution and boundaries
+│   └── README.md           # SDD documentation
+├── challenge/               # Original challenge code (preserved)
+│   ├── api.py              # FastAPI implementation
+│   ├── model.py            # Model implementation
+│   └── exploration.qmd     # Exploratory analysis
+├── src/                    # SDD source code modules
+│   ├── data/              # Data processing modules
+│   ├── features/          # Feature engineering
+│   ├── models/            # Model definitions
+│   ├── evaluation/        # Model evaluation
+│   └── utils/             # Utility functions
+├── pipeline/              # Pipeline orchestration
+│   ├── dags/             # Airflow DAGs (future)
+│   ├── scripts/          # Pipeline scripts
+│   └── config/           # Pipeline configurations
+├── config/               # YAML configurations
+│   ├── global/           # Global settings
+│   ├── dev/              # Development settings
+│   ├── stage/            # Staging settings
+│   └── prod/             # Production settings
+├── tests/                # Test suites
+│   ├── unit/             # Unit tests
+│   ├── integration/      # Integration tests
+│   └── data/             # Test fixtures
+├── data/                 # Data directories
+│   ├── raw/              # Raw input data
+│   ├── processed/        # Processed data
+│   └── external/         # External data references
+├── docs/                 # Documentation
+│   └── adr/              # Architecture Decision Records
+├── notebooks/            # Quarto notebooks
+├── models/               # Saved models
+├── outputs/              # Analysis outputs
+└── scripts/              # Standalone scripts
+```
+
+### Key SDD Principles
+
+- **Constitution-Driven**: All decisions follow the constitution boundaries
+- **YAML Configuration**: Hierarchical config overrides (global → env → runtime)
+- **Debug Mode**: All pipelines support `--debug-mode` for fast testing
+- **No Output Commits**: Only source code is versioned
+- **Modular Design**: SOLID principles for all code
+
 ## Problem
 
 A jupyter notebook (training.ipynb) has been provided with the work of a Data Scientist (from now on, the DS). The DS, trained a model to predict the probability of **delay** for a flight taking off or landing at SCL airport. The model was trained with public and real data, below we provide you with the description of the dataset:
