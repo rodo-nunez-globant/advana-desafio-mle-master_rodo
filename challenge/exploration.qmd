@@ -1,6 +1,6 @@
 ---
 title: 0. Load Data
-jupyter: python3
+jupyter: flight-delay-prediction
 ---
 
 ```{python}
@@ -16,7 +16,7 @@ warnings.filterwarnings('ignore')
 
 
 ```{python}
-data = pd.read_csv('../data/data.csv')
+data = pd.read_csv('../data/raw/data.csv')
 data.info()
 ```
 
