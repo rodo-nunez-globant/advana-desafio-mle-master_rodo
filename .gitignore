@@ -20,3 +20,4 @@ secrets/
 .pytest_cache
 insecure_report.txt
 reports
+*.ipynb
