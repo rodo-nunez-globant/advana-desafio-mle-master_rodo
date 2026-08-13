@@ -32,6 +32,8 @@ The exploration notebook contains all the data analysis, feature engineering, an
 
 ### 2. Robust Pipeline Solution (Production Implementation)
 
+There are a lot of ways to create pipelines. We could use a simple script importation, we could use Pipeline from scikit learn, we could create an Airflow DAG for batch processes, we could create a KubeFlow pipeline to later upload to Vertex AI, etc. There are intinite ways to create modularized pipelines. Here I want to propose one idea simple enought, but with some ideas I like to implement, like a debug mode. We can talk more about this during the technical interview.
+
 **Structure**:
 ```
 src/data/preprocess.py          # Custom transformers for feature engineering
