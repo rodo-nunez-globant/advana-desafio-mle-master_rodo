@@ -36,6 +36,7 @@ I generated a `model.py` script using my specs, then I reviewed it and fixed som
 
 I created a main section for the model.py script to test the end-to-end pipeline quickly and with debug tool. That's easier to debug IMO thather than using a test. The test is great for automatics alerts, but having a place to easily debug is very useful. This is not what I would do in general, I like other ways to debug. But there is not much time for that now. We can talk more about that duringthe technical interview.
 
+When implementing the model training, I used the method's option to balance the data, so we can hidde complexity there and use tools already available to us instead of calculating it ourselfs.
 
 ## Model choice
 
