@@ -23,3 +23,55 @@ I fixed some dependency problems and I defined an explicit python version for th
 I fixed some typos, and outdated syntax in the qmd. After that, I was able to run the qmd from end to end. I changes some formatting options to make it use a dark theme.
 
 I read the full qmd report (rendered to html), to understand the current status and what the DS found out.
+
+I chose the model we would use. The reasoning is below.
+
+## Model choice
+
+Depending on the business objective, it could be more important to identify as many positives as posible (delayed flights), or it could be more important to make sure our positive predictions are correct. My guess is that for this case, we care more about the first case, that means, we need a high recall. Depending on how much important is to minimize false negatives versus false positives, I would chose which F-Beta score to add to the table. Maybe F-2 or F-3 score could be good.
+
+### GXBoost
+
+This model is useless. Predicts every flight as not being delayed. It doesn't matter what metricts it has, it's not applicable to making decisions.
+
+We could probably improve it, by better filtering the variables we give it and giving it more variables other than the 3 original cathegorical variables. But I won't improve it to optimize my time on this challenge. We can discuss this later during the tachnical interview, if you want.
+
+We could also balance our classes, but that's what the DS did later.
+
+### Logistic Regression
+
+In our case recall for 1s is 0.03, so it's better than 0, but it's still terrible.
+
+### XGBoost with Feature Importance and with Balance
+
+Now we are talking.
+
+Our recall for class 1 is 0.69. That's not good, but at least it's not trash xD we moved in a good direction.
+
+### XGBoost with Feature Importance but without Balance
+
+Without balance, this model is comparable with the original logistic regression. It's terrible. We are not using this model.
+
+### Logistic Regression with Feature Importante and with Balance
+
+Again, a decent model, thanks to the class balance. 0.69 recall for class 1 again. XGBoost is sliiiiiiightly better.
+
+### Logistic Regression with Feature Importante but without Balance
+
+Again, without balance, we get useless models. This is a very unbalance case. And thanks for that, because if it wasn't, we would be without a job with a pile of angry customers asking for refunds xD
+
+### Final choice
+
+"XGBoost with Feature Importance and with Balance" and "Logistic Regression with Feature Importante and with Balance" a very comparable.
+
+If we HAVE to choose between those two without any more improvements, **I would choose logistic regression** because of prediction speed and simplicity and interpretability, specially if we need to run this model live or on edge. 
+
+If we need to run it as a batch process, it wouldn't matter that much. Logitic regression is easier to interpret, but we can always use model agnostic tools to interpret model results globally and locally, like with Shapley Values, by using SHAP (SHapley Additive exPlanations), for example.
+
+## Possible improvements in DS development practices
+
+- The DS hardcoded the top 10 features. That's bad because the logic is not reproducible with different datasets, so it would corrupt our results for future training in our continous training process.
+- Using Jupyter Notebook is a bad practice, because it stores a bunch of metadata that could be accidentally commited, it's not Git friends, and so many other problems. I could talk about this for an hour (I gave a talk about this a couple years ago). It's better to use Quarto Notebooks or just use .py, .r, .sh, and other scripts.
+- We could improve our feature engineering process. It was too generic and quick.
+- I don't like these notebooks with bad models and incomplete preprocessing. The DS should look into that and present their final pipeline, without the history of his research, If we want to check his reasoning, we can check his commits or maybe another report that is tagged as containing obsolete results that were archived. I redid most of the analysis again, concluding that we had some useless models, and that not a good use of a teammate's time. 
+
