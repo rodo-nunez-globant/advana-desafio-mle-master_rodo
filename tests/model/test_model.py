@@ -88,12 +88,24 @@ class TestModel(unittest.TestCase):
     def test_model_predict(
         self
     ):
-        features = self.model.preprocess(
+        features, target = self.model.preprocess(
+            data=self.data,
+            target_column="delay"
+        )
+        
+        # Train the model first
+        self.model.fit(
+            features=features,
+            target=target
+        )
+        
+        # Preprocess for prediction (without target)
+        predict_features = self.model.preprocess(
             data=self.data
         )
 
         predicted_targets = self.model.predict(
-            features=features
+            features=predict_features
         )
 
         assert isinstance(predicted_targets, list)
