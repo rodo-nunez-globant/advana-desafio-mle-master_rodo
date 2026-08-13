@@ -34,6 +34,9 @@ I had to debug some problems with testing libraries, wrong paths that I changed 
 
 I generated a `model.py` script using my specs, then I reviewed it and fixed some mistakes. For example, the AI tryied to replace columns by 0, but I changed that to raising an error if any column we need was not found. 
 
+I created a main section for the model.py script to test the end-to-end pipeline quickly and with debug tool. That's easier to debug IMO thather than using a test. The test is great for automatics alerts, but having a place to easily debug is very useful. This is not what I would do in general, I like other ways to debug. But there is not much time for that now. We can talk more about that duringthe technical interview.
+
+
 ## Model choice
 
 Depending on the business objective, it could be more important to identify as many positives as posible (delayed flights), or it could be more important to make sure our positive predictions are correct. My guess is that for this case, we care more about the first case, that means, we need a high recall. Depending on how much important is to minimize false negatives versus false positives, I would chose which F-Beta score to add to the table. Maybe F-2 or F-3 score could be good.
@@ -85,4 +88,5 @@ In the future, we we implemente continuous training, I would use both aproaches 
 - We could improve our feature engineering process. It was too generic and quick.
 - I don't like these notebooks with bad models and incomplete preprocessing. The DS should look into that and present their final pipeline, without the history of his research, If we want to check his reasoning, we can check his commits or maybe another report that is tagged as containing obsolete results that were archived. I redid most of the analysis again, concluding that we had some useless models, and that not a good use of a teammate's time. 
 - I found a big conceptual problem in the test script. We were leaking data by training with the whole dataset and then using a subset to validate. In that case, it's better to use the whole dataset to get the training report, or to use a completly different dataset to simulate a test report. But not a mix.
+- We could condence all important variables in a set of config files. A global config, and three other configs with the differences between dev, stage and prod.
 

@@ -172,9 +172,43 @@ class DelayModel:
         return predictions.tolist()
 
 if __name__=="__main__":
-
+    from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+    
+    print("Starting Flight Delay Prediction Pipeline...")
+    print("=" * 50)
+    
+    # Initialize model
     model = DelayModel()
+    
+    # Load data
+    print("Loading data...")
     data = pd.read_csv(filepath_or_buffer="data/data.csv")
+    print(f"Data shape: {data.shape}")
+    
+    # Preprocess data
+    print("\nPreprocessing data...")
+    features, target = model.preprocess(data=data, target_column="delay")
+    print(f"Features shape: {features.shape}")
+    print(f"Target shape: {target.shape}")
+    print(f"Class distribution: {target.value_counts().to_dict()}")
+    
+    # Train model
+    print("\nTraining model...")
+    model.fit(features=features, target=target)
+    print("Model trained successfully!")
+    
+    # Make predictions on training data (for demonstration)
+    print("\nMaking predictions...")
+    predictions = model.predict(features=features)
+    
+    # Evaluate model
+    print("\nModel Evaluation:")
+    print("-" * 30)
+    print(f"Accuracy: {accuracy_score(target, predictions):.4f}")
+    print("\nClassification Report:")
+    print(classification_report(target, predictions))
+    print("\nConfusion Matrix:")
+    print(confusion_matrix(target, predictions))
 
-    model.preprocess(data=data)
+    print("\nPipeline completed successfully!")
     
