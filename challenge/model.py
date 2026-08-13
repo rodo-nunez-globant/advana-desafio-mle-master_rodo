@@ -168,5 +168,9 @@ class DelayModel:
         return predictions.tolist()
 
 if __name__=="__main__":
-    delay = DelayModel()
+
+    model = DelayModel()
+    data = pd.read_csv(filepath_or_buffer="data/data.csv")
+
+    model.preprocess(data=data)
     
