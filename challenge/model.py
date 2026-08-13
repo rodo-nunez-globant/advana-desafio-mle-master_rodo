@@ -92,9 +92,13 @@ class DelayModel:
         # Select only the required features
         missing_features = [col for col in self._features_cols if col not in features.columns]
         if missing_features:
-            # Add missing features as zeros
-            for col in missing_features:
-                features[col] = 0
+            raise ValueError(
+                f"Missing required feature columns: {missing_features}. "
+                f"Required features: {self._features_cols}. "
+                f"This may be due to missing categories in the data. "
+                f"Ensure your data contains all necessary airline (OPERA), month (MES), "
+                f"and flight type (TIPOVUELO) combinations."
+            )
         
         # Ensure consistent column order
         features = features[self._features_cols]
