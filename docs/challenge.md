@@ -26,6 +26,10 @@ I read the full qmd report (rendered to html), to understand the current status 
 
 I chose the model we would use. The reasoning is below.
 
+So far, I was working on the dev branch, because I was doing a bunch of small very simple changes. There was no need for a feature branch. I did one merge to main with a tag when the qmd was working, in case a broke it, so I knew where to roll back to recover the functionality. But now that I already understood the whole DS procees and the question the DS sent me, and I replied to them, it's time to roll up my sleeves. I'm making a plan to modularice the code, so it's maintainable in the future, bugs can be isolated so certain components, complexity is hidden behind functions, and many more advantages of modularizing.
+
+I created `feat/modularization` branch and used my SDD skills to create an ADR about modularity, create specs, design, tasks and implement the tasks. Then I reviewed the work before sending a PR to dev. This is the first PR I send, since this is a very simple repo, but this is the biggest chunck of work so far and it could be useful to store the PR for somebody else to check in the future. I will still auto approve and merge my PR, because I'm all alone xD
+
 ## Model choice
 
 Depending on the business objective, it could be more important to identify as many positives as posible (delayed flights), or it could be more important to make sure our positive predictions are correct. My guess is that for this case, we care more about the first case, that means, we need a high recall. Depending on how much important is to minimize false negatives versus false positives, I would chose which F-Beta score to add to the table. Maybe F-2 or F-3 score could be good.
