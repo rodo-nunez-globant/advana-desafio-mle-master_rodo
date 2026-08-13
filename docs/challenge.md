@@ -26,6 +26,20 @@ I read the full qmd report (rendered to html), to understand the current status 
 
 I chose the model we would use. The reasoning is below.
 
+So far, I was working on the dev branch, because I was doing a bunch of small very simple changes. There was no need for a feature branch. I did one merge to main with a tag when the qmd was working, in case a broke it, so I knew where to roll back to recover the functionality. But now that I already understood the whole DS procees and the question the DS sent me, and I replied to them, it's time to roll up my sleeves. I'm making a plan to modularice the code, so it's maintainable in the future, bugs can be isolated so certain components, complexity is hidden behind functions, and many more advantages of modularizing.
+
+I created `feat/modularization` branch and used my SDD skills to create an ADR about modularity, create specs, design, tasks and implement the tasks. Then I reviewed the work before sending a PR to dev. This is the first PR I send, since this is a very simple repo, but this is the biggest chunck of work so far and it could be useful to store the PR for somebody else to check in the future. I will still auto approve and merge my PR, because I'm all alone xD
+
+I had to debug some problems with testing libraries, wrong paths that I changed to relative paths to the project's root, data leakage problem in test script, and more.
+
+I generated a `model.py` script using my specs, then I reviewed it and fixed some mistakes. For example, the AI tryied to replace columns by 0, but I changed that to raising an error if any column we need was not found. 
+
+I created a main section for the model.py script to test the end-to-end pipeline quickly and with debug tool. That's easier to debug IMO thather than using a test. The test is great for automatics alerts, but having a place to easily debug is very useful. This is not what I would do in general, I like other ways to debug. But there is not much time for that now. We can talk more about that duringthe technical interview.
+
+When implementing the model training, I used the method's option to balance the data, so we can hidde complexity there and use tools already available to us instead of calculating it ourselfs.
+
+I fixed some warnings for possible problems with data types on the test.
+
 ## Model choice
 
 Depending on the business objective, it could be more important to identify as many positives as posible (delayed flights), or it could be more important to make sure our positive predictions are correct. My guess is that for this case, we care more about the first case, that means, we need a high recall. Depending on how much important is to minimize false negatives versus false positives, I would chose which F-Beta score to add to the table. Maybe F-2 or F-3 score could be good.
@@ -68,10 +82,14 @@ If we HAVE to choose between those two without any more improvements, **I would 
 
 If we need to run it as a batch process, it wouldn't matter that much. Logitic regression is easier to interpret, but we can always use model agnostic tools to interpret model results globally and locally, like with Shapley Values, by using SHAP (SHapley Additive exPlanations), for example.
 
+In the future, we we implemente continuous training, I would use both aproaches and chose the best in an automatic way. I would define a minimum improvement on a specific metric to use a more complex model than the currect champion. I would train multiple models later, because the flight's behaviour could change after a couple months or years, so the best model could change in the future.
+
 ## Possible improvements in DS development practices
 
 - The DS hardcoded the top 10 features. That's bad because the logic is not reproducible with different datasets, so it would corrupt our results for future training in our continous training process.
 - Using Jupyter Notebook is a bad practice, because it stores a bunch of metadata that could be accidentally commited, it's not Git friends, and so many other problems. I could talk about this for an hour (I gave a talk about this a couple years ago). It's better to use Quarto Notebooks or just use .py, .r, .sh, and other scripts.
 - We could improve our feature engineering process. It was too generic and quick.
 - I don't like these notebooks with bad models and incomplete preprocessing. The DS should look into that and present their final pipeline, without the history of his research, If we want to check his reasoning, we can check his commits or maybe another report that is tagged as containing obsolete results that were archived. I redid most of the analysis again, concluding that we had some useless models, and that not a good use of a teammate's time. 
+- I found a big conceptual problem in the test script. We were leaking data by training with the whole dataset and then using a subset to validate. In that case, it's better to use the whole dataset to get the training report, or to use a completly different dataset to simulate a test report. But not a mix.
+- We could condence all important variables in a set of config files. A global config, and three other configs with the differences between dev, stage and prod.
 
