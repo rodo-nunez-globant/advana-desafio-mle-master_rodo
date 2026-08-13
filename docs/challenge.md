@@ -72,6 +72,8 @@ If we HAVE to choose between those two without any more improvements, **I would 
 
 If we need to run it as a batch process, it wouldn't matter that much. Logitic regression is easier to interpret, but we can always use model agnostic tools to interpret model results globally and locally, like with Shapley Values, by using SHAP (SHapley Additive exPlanations), for example.
 
+In the future, we we implemente continuous training, I would use both aproaches and chose the best in an automatic way. I would define a minimum improvement on a specific metric to use a more complex model than the currect champion. I would train multiple models later, because the flight's behaviour could change after a couple months or years, so the best model could change in the future.
+
 ## Possible improvements in DS development practices
 
 - The DS hardcoded the top 10 features. That's bad because the logic is not reproducible with different datasets, so it would corrupt our results for future training in our continous training process.
