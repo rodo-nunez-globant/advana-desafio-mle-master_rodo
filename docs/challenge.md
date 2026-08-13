@@ -30,6 +30,10 @@ So far, I was working on the dev branch, because I was doing a bunch of small ve
 
 I created `feat/modularization` branch and used my SDD skills to create an ADR about modularity, create specs, design, tasks and implement the tasks. Then I reviewed the work before sending a PR to dev. This is the first PR I send, since this is a very simple repo, but this is the biggest chunck of work so far and it could be useful to store the PR for somebody else to check in the future. I will still auto approve and merge my PR, because I'm all alone xD
 
+I had to debug some problems with testing libraries, wrong paths that I changed to relative paths to the project's root, data leakage problem in test script, and more.
+
+I generated a `model.py` script using my specs, then I reviewed it and fixed some mistakes. For example, the AI tryied to replace columns by 0, but I changed that to raising an error if any column we need was not found. 
+
 ## Model choice
 
 Depending on the business objective, it could be more important to identify as many positives as posible (delayed flights), or it could be more important to make sure our positive predictions are correct. My guess is that for this case, we care more about the first case, that means, we need a high recall. Depending on how much important is to minimize false negatives versus false positives, I would chose which F-Beta score to add to the table. Maybe F-2 or F-3 score could be good.
@@ -80,4 +84,5 @@ In the future, we we implemente continuous training, I would use both aproaches 
 - Using Jupyter Notebook is a bad practice, because it stores a bunch of metadata that could be accidentally commited, it's not Git friends, and so many other problems. I could talk about this for an hour (I gave a talk about this a couple years ago). It's better to use Quarto Notebooks or just use .py, .r, .sh, and other scripts.
 - We could improve our feature engineering process. It was too generic and quick.
 - I don't like these notebooks with bad models and incomplete preprocessing. The DS should look into that and present their final pipeline, without the history of his research, If we want to check his reasoning, we can check his commits or maybe another report that is tagged as containing obsolete results that were archived. I redid most of the analysis again, concluding that we had some useless models, and that not a good use of a teammate's time. 
+- I found a big conceptual problem in the test script. We were leaking data by training with the whole dataset and then using a subset to validate. In that case, it's better to use the whole dataset to get the training report, or to use a completly different dataset to simulate a test report. But not a mix.
 
