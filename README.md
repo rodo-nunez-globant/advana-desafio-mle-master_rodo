@@ -1,5 +1,8 @@
 # Software Engineer (ML & LLMs) Challenge
 
+[![CI](https://github.com/rodo-nunez-globant/advana-desafio-mle-master_rodo/actions/workflows/ci.yml/badge.svg)](https://github.com/rodo-nunez-globant/advana-desafio-mle-master_rodo/actions/workflows/ci.yml)
+[![CD](https://github.com/rodo-nunez-globant/advana-desafio-mle-master_rodo/actions/workflows/cd.yml/badge.svg)](https://github.com/rodo-nunez-globant/advana-desafio-mle-master_rodo/actions/workflows/cd.yml)
+
 ## Overview
 
 Welcome to the **Software Engineer (ML & LLMs)** Application Challenge. In this, you will have the opportunity to get closer to a part of the reality of the role, and demonstrate your skills and knowledge in machine learning and cloud.
@@ -162,5 +165,12 @@ Deploy the `API` in your favorite cloud provider (we recomend to use GCP).
 
 We are looking for a proper `CI/CD` implementation for this development.
 
-- Create a new folder called `.github` and copy the `workflows` folder that we provided inside it.
+✅ **COMPLETED**: CI/CD workflow has been implemented using GitHub Actions.
+
+- **CI Workflow**: Runs tests on pull requests to dev, stage, and main branches
+- **CD Workflow**: Builds Docker images on merges to main branch
+- **Documentation**: See [docs/cicd-workflow.md](docs/cicd-workflow.md) for detailed usage
+- **Branch Protection**: Configured for permanent branches (dev, stage, main)
+
+The workflow files are located in `workflows/` and follow the simple approach using existing Makefile targets.
 - Complete both `ci.yml` and `cd.yml`(consider what you did in the previous parts).
