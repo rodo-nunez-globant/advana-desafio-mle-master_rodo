@@ -6,7 +6,7 @@ This project uses GitHub Actions for Continuous Integration and Continuous Deliv
 
 ## Workflow Structure
 
-### Continuous Integration (CI) - `workflows/ci.yml`
+### Continuous Integration (CI) - `.github/workflows/ci.yml`
 
 **Triggers**: Pull requests to `dev`, `stage`, or `main` branches
 
@@ -21,7 +21,7 @@ This project uses GitHub Actions for Continuous Integration and Continuous Deliv
 - Stress test reports (HTML)
 - Retention: 30 days
 
-### Continuous Delivery (CD) - `workflows/cd.yml`
+### Continuous Delivery (CD) - `.github/workflows/cd.yml`
 
 **Triggers**: Push to `main` branch only
 

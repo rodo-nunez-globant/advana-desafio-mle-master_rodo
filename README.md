@@ -172,5 +172,5 @@ We are looking for a proper `CI/CD` implementation for this development.
 - **Documentation**: See [docs/cicd-workflow.md](docs/cicd-workflow.md) for detailed usage
 - **Branch Protection**: Configured for permanent branches (dev, stage, main)
 
-The workflow files are located in `workflows/` and follow the simple approach using existing Makefile targets.
+The workflow files are located in `.github/workflows/` and follow the simple approach using existing Makefile targets.
 - Complete both `ci.yml` and `cd.yml`(consider what you did in the previous parts).
