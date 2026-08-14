@@ -10,4 +10,4 @@ async def get_health() -> dict:
 
 @app.post("/predict", status_code=200)
 async def post_predict() -> dict:
-    return
+    return {"message": "Predict endpoint not yet implemented"}
