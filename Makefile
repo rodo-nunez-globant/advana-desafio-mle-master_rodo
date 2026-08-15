@@ -79,7 +79,7 @@ install-dev:		## Install development dependencies
 	@echo "Installing development dependencies..."
 	$(ACTIVATE) $(INSTALL_DEV)
 
-STRESS_URL = http://127.0.0.1:8000 
+STRESS_URL = https://flight-delay-api-jfxmsxnaja-uc.a.run.app
 .PHONY: stress-test
 stress-test:			## Run stress tests (change stress url to your deployed app)
 	mkdir reports || true
