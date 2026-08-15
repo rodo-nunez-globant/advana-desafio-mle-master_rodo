@@ -39,6 +39,8 @@ dependencies = [
     "matplotlib>=3.11.1",
     "seaborn>=0.13.2",
     "pytest-cov>=7.1.0",
+    "httpx2>=2.10.0",
+    "pydantic-settings>=2.15.0",
 ]
 
 [project.optional-dependencies]
