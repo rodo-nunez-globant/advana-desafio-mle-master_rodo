@@ -164,3 +164,34 @@ We are looking for a proper `CI/CD` implementation for this development.
 
 - Create a new folder called `.github` and copy the `workflows` folder that we provided inside it.
 - Complete both `ci.yml` and `cd.yml`(consider what you did in the previous parts).
+
+## Real Model Implementation ✅
+
+The API now uses a **real trained model** instead of dummy predictions!
+
+### How it works:
+- Uses the existing `DelayModel` class in `challenge/model.py`
+- Trained on 68,206 real flights from `data/data.csv`
+- Model saved to `models/delay_model.pkl` and loaded by API
+
+### Train the model:
+```bash
+# Train using existing DelayModel class
+uv run python challenge/train_model.py
+
+# Start API with real model
+uv run uvicorn challenge.api:app --reload
+```
+
+### Test predictions:
+```bash
+# Health check (shows model_loaded: true)
+curl http://localhost:8000/health
+
+# Real prediction
+curl -X POST http://localhost:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{"flights": [{"OPERA": "Grupo LATAM", "TIPOVUELO": "I", "MES": 7}]}'
+```
+
+The model learns patterns from real flight data to predict delays based on airline, month, and flight type.
