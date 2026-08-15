@@ -52,31 +52,44 @@ class DelayModel:
         if data.empty:
             raise ValueError("Input data is empty")
         
-        missing_columns = [col for col in self._required_columns if col not in data.columns]
-        if missing_columns:
-            raise ValueError(f"Missing required columns: {missing_columns}")
+        # Check if we have date columns (training data) or not (prediction data)
+        has_dates = all(col in data.columns for col in ['Fecha-I', 'Fecha-O'])
+        
+        if has_dates:
+            # Training mode: require all columns
+            missing_columns = [col for col in self._required_columns if col not in data.columns]
+            if missing_columns:
+                raise ValueError(f"Missing required columns: {missing_columns}")
+        else:
+            # Prediction mode: only need the categorical columns
+            required_prediction_cols = ['OPERA', 'MES', 'TIPOVUELO']
+            missing_columns = [col for col in required_prediction_cols if col not in data.columns]
+            if missing_columns:
+                raise ValueError(f"Missing required columns: {missing_columns}")
         
         # Make a copy to avoid modifying original data
         data = data.copy()
         
-        # Convert date columns to datetime
-        try:
-            data['Fecha-I'] = pd.to_datetime(data['Fecha-I'])
-            data['Fecha-O'] = pd.to_datetime(data['Fecha-O'])
-        except Exception as e:
-            raise ValueError(f"Error parsing date columns: {e}")
+        # Process dates only if available (training mode)
+        if has_dates:
+            # Convert date columns to datetime
+            try:
+                data['Fecha-I'] = pd.to_datetime(data['Fecha-I'])
+                data['Fecha-O'] = pd.to_datetime(data['Fecha-O'])
+            except Exception as e:
+                raise ValueError(f"Error parsing date columns: {e}")
+            
+            # Calculate min_diff in minutes
+            data['min_diff'] = (data['Fecha-O'] - data['Fecha-I']).dt.total_seconds() / 60
+            
+            # Create target column if requested
+            if target_column is not None:
+                if target_column == self._target_col:
+                    data[self._target_col] = (data['min_diff'] > self._delay_threshold).astype(int)
+                else:
+                    raise ValueError(f"Invalid target_column: {target_column}")
         
-        # Calculate min_diff in minutes
-        data['min_diff'] = (data['Fecha-O'] - data['Fecha-I']).dt.total_seconds() / 60
-        
-        # Create target column if requested
-        if target_column is not None:
-            if target_column == self._target_col:
-                data[self._target_col] = (data['min_diff'] > self._delay_threshold).astype(int)
-            else:
-                raise ValueError(f"Invalid target_column: {target_column}")
-        
-        # One-hot encode categorical variables
+        # One-hot encode categorical variables (same for both modes)
         # OPERA (airline)
         opera_dummies = pd.get_dummies(data['OPERA'], prefix='OPERA')
         
@@ -89,22 +102,19 @@ class DelayModel:
         # Combine all features
         features = pd.concat([opera_dummies, mes_dummies, tipo_vuelo_dummies], axis=1)
         
-        # Select only the required features
-        missing_features = [col for col in self._features_cols if col not in features.columns]
-        if missing_features:
-            raise ValueError(
-                f"Missing required feature columns: {missing_features}. "
-                f"Required features: {self._features_cols}. "
-                f"This may be due to missing categories in the data. "
-                f"Ensure your data contains all necessary airline (OPERA), month (MES), "
-                f"and flight type (TIPOVUELO) combinations."
-            )
+        # Add missing feature columns (set to 0 if not present)
+        # This handles cases where prediction data doesn't have all categories
+        for col in self._features_cols:
+            if col not in features.columns:
+                features[col] = 0
         
         # Ensure consistent column order
         features = features[self._features_cols]
         
         # Return based on whether target was requested
         if target_column is not None:
+            if not has_dates:
+                raise ValueError("Cannot create target without date columns")
             target = data[[self._target_col]]
             return features, target
         else:

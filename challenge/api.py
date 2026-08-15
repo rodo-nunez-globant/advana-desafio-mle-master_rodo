@@ -126,7 +126,7 @@ async def post_predict(request: PredictionRequest) -> dict:
             # Convert to DataFrame for model preprocessing
             df = pd.DataFrame(flights_data)
             
-            # Preprocess the data (creates the required 10 features)
+            # Preprocess the data (handles both training and prediction modes)
             features = model.preprocess(df)
             
             # Make predictions using the trained model
