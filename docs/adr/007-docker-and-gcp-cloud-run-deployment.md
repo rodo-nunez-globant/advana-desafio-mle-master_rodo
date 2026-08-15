@@ -213,6 +213,57 @@ tracer = trace.get_tracer(__name__)
 - **Code in Git** - Version controlled
 - **Configuration** - In deployment scripts
 
+## Deployment Issue Resolution
+
+### Problem Encountered
+During initial deployment attempts, Google Cloud Build failed with:
+```
+COPY failed: file not found in build context or excluded by .dockerignore: stat data/: file does not exist
+```
+
+The data.csv file (8.3MB) was present locally and Docker builds worked correctly, but Google Cloud Build could not access the data directory during the remote build process.
+
+### Root Cause
+The `.gcloudignore` file had conflicting patterns:
+```diff
+# IMPORTANT: Explicitly include data directory
+!data/
+data/**  # This line was excluding everything in data/
+```
+
+The `data/**` exclusion pattern was overriding the `!data/` inclusion pattern, preventing the data directory from being uploaded to Cloud Build.
+
+### Solution Implemented
+
+1. **Fixed `.gcloudignore` configuration**
+   - Removed the conflicting `data/**` pattern
+   - Kept only `!data/` to ensure inclusion
+
+2. **Added build verification with `cloudbuild.yaml`**
+   ```yaml
+   steps:
+     - name: 'gcr.io/cloud-builders/docker'
+       args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_SERVICE_NAME', '.']
+     
+     - name: 'gcr.io/$PROJECT_ID/$_SERVICE_NAME'
+       entrypoint: 'sh'
+       args: 
+         - '-c'
+         - |
+           echo "Checking if data.csv exists..."
+           ls -la data/data.csv && echo "✅ data.csv found" || (echo "❌ data.csv missing!" && exit 1)
+   ```
+
+3. **Updated deployment script**
+   - Changed from `gcloud builds submit --tag` to `gcloud builds submit --config`
+   - Added substitution variables for service name
+
+### Lessons Learned
+- `.gcloudignore` patterns work differently from `.dockerignore`
+- Order matters: exclusions after inclusions will override them
+- Build verification steps help catch configuration issues early
+- Google Cloud Build has separate ignore behavior from local Docker builds
+
 ## Future Considerations
 
 ### Potential Improvements

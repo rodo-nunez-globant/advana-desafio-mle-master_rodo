@@ -22,11 +22,18 @@ COPY pyproject.toml uv.lock ./
 RUN pip install uv
 RUN uv sync --frozen --no-dev
 
-# Copy application code
-COPY . .
+# Copy application code first
+COPY challenge/ challenge/
+COPY models/ models/
 
-# Create models directory
-RUN mkdir -p models
+# Install the package in editable mode so imports work
+RUN uv pip install -e .
+
+# Copy data (larger files, copy later for better caching)
+COPY data/ data/
+
+# Verify data is present
+RUN ls -la data/data.csv && echo "Data file found" || (echo "Data file missing!" && exit 1)
 
 # Train the model (this will create the model file)
 RUN uv run python challenge/train_model.py
