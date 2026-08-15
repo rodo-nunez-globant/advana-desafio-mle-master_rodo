@@ -9,6 +9,9 @@ class FlightData(BaseModel):
     OPERA: str = Field(..., description="Airline name")
     TIPOVUELO: str = Field(..., description="Flight type (N=National, I=International)")
     MES: int = Field(..., ge=1, le=12, description="Month number (1-12)")
+
+    # TODO: Add a field validator for MES
+    # TODO: ideally, don't hardcode variables. Use a config file or something similar to centralice important parameters. Could we use `challenge/config.py` for this?
     
     @field_validator('OPERA')
     @classmethod
