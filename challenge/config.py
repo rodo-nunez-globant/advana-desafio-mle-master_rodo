@@ -36,7 +36,7 @@ class APISettings(BaseSettings):
     debug: bool = False
     
     # CORS settings
-    cors_origins: list = ["*"]
+    cors_origins: list = ["*"] # For the challenge, we need to allow connections from everywhere in the web. This is not secure for a real application, but it's fine for our case
     cors_methods: list = ["GET", "POST"]
     cors_headers: list = ["*"]
 
