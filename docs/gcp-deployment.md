@@ -31,10 +31,10 @@ This guide explains how to deploy the Flight Delay Prediction API to Google Clou
 Use the provided deployment script:
 
 ```bash
-# Deploy with default settings (uses current gcloud project)
+# Deploy with default project ID (rodo-nunez-challenge-latam)
 ./deploy/gcp-deploy.sh
 
-# Or specify project, region, and service name
+# Or specify different project, region, and service name
 ./deploy/gcp-deploy.sh my-project-id us-central1 flight-api
 ```
 
@@ -42,9 +42,9 @@ Use the provided deployment script:
 
 1. **Build and push the image**
    ```bash
-   export PROJECT_ID=$(gcloud config get-value project)
+   export PROJECT_ID=rodo-nunez-challenge-latam
    export IMAGE_NAME="gcr.io/$PROJECT_ID/flight-delay-api"
-   
+
    # Build and push
    gcloud builds submit --tag $IMAGE_NAME
    ```
