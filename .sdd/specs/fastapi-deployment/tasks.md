@@ -22,6 +22,9 @@
 - [x] Integrate DelayModel with FastAPI application
 - [x] Add model version tracking
 - [x] Implement model status checking
+- [x] Train real model using flight data
+- [x] Replace dummy predictions with real model predictions
+- [x] Add fallback to dummy predictions when model not loaded
 
 ### Core Endpoints
 - [x] Implement enhanced `/health` endpoint with model status
@@ -59,6 +62,29 @@
 - [x] Validate error response format for test cases
 - [x] Test batch prediction functionality
 - [x] Ensure health check returns expected format
+
+## Priority 1.5: Real Model Implementation
+
+### Model Training
+- [x] Create model training script using real flight data
+- [x] Train Logistic Regression model with 10 required features
+- [x] Save trained model to models/delay_model.pkl
+- [x] Validate model training with basic metrics
+- [x] Test model predictions on sample data
+
+### Model Integration
+- [x] Update API startup to load pre-trained model
+- [x] Replace dummy predictions with real model predictions
+- [x] Add proper error handling for model loading failures
+- [x] Maintain backward compatibility with tests
+- [x] Add logging for model vs dummy predictions
+
+### Testing and Validation
+- [x] Create test script for real model predictions
+- [x] Test API with different airlines and months
+- [x] Verify health check shows model loaded status
+- [x] Create startup script for easy testing
+- [x] Document model behavior and predictions
 
 ## Priority 2: Performance and Monitoring
 

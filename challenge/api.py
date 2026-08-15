@@ -2,7 +2,9 @@ import logging
 import os
 from datetime import datetime, timezone
 from contextlib import asynccontextmanager
+from pathlib import Path
 
+import pandas as pd
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -34,9 +36,18 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("Starting Flight Delay Prediction API...")
     try:
-        # For now, we'll initialize the model without loading from file
-        # In a real scenario, we would load a pre-trained model here
-        logger.info("Model initialized successfully")
+        # Try to load a pre-trained model if available
+        model_path = Path(api_settings.model_path)
+        if model_path.exists():
+            logger.info(f"Loading pre-trained model from {model_path}")
+            import joblib
+            global model
+            model = joblib.load(model_path)
+            logger.info("✅ Real model loaded successfully")
+        else:
+            logger.warning(f"No model file found at {model_path}, using untrained model")
+            logger.info("Model initialized successfully (untrained)")
+        
         logger.info(f"API ready - Environment: {api_settings.environment}")
     except Exception as e:
         logger.error(f"Failed to initialize model: {e}")
@@ -105,13 +116,27 @@ async def post_predict(request: PredictionRequest) -> dict:
         # Convert flight data to list of dictionaries for model processing
         flights_data = [flight.model_dump() for flight in request.flights]
         
-        # For now, since we don't have a pre-trained model, we'll return dummy predictions
-        # In a real implementation, this would use the actual model
+        # Use the real model if available, otherwise use dummy predictions
         logger.info(f"Processing {len(flights_data)} flight predictions")
         
-        # Dummy predictions (0 = no delay, 1 = delay)
-        # In real implementation: predictions = model.predict(preprocessed_data)
-        predictions = [0] * len(flights_data)
+        if model._model is not None:
+            # Use real model for predictions
+            logger.info("Using real trained model for predictions")
+            
+            # Convert to DataFrame for model preprocessing
+            df = pd.DataFrame(flights_data)
+            
+            # Preprocess the data (creates the required 10 features)
+            features = model.preprocess(df)
+            
+            # Make predictions using the trained model
+            predictions = model.predict(features)
+            
+            logger.info(f"Generated {len(predictions)} real model predictions")
+        else:
+            # Fallback to dummy predictions if no model is loaded
+            logger.warning("No trained model available, using dummy predictions")
+            predictions = [0] * len(flights_data)
         
         # Calculate processing time
         processing_time = (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
