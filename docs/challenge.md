@@ -42,6 +42,8 @@ I fixed some warnings for possible problems with data types on the test.
 
 I cleaned up some files to create version 0.0.2
 
+I implemented a first API skeleton with SDD. I checked the whole ADR, spec and code. I don't work much with FastAPI, so I made sure to understand every detail to learn and make sure everything made sense. At first, we only use a dummy model to test the structure is working.
+
 ## Model choice
 
 Depending on the business objective, it could be more important to identify as many positives as posible (delayed flights), or it could be more important to make sure our positive predictions are correct. My guess is that for this case, we care more about the first case, that means, we need a high recall. Depending on how much important is to minimize false negatives versus false positives, I would chose which F-Beta score to add to the table. Maybe F-2 or F-3 score could be good.
