@@ -84,6 +84,8 @@ install-dev:		## Install development dependencies
 STRESS_URL = https://flight-delay-api-jfxmsxnaja-uc.a.run.app
 .PHONY: stress-test
 stress-test:			## Run stress tests (change stress url to your deployed app)
+	@echo "Installing test dependencies..."
+	$(ACTIVATE) $(PIP_CMD) install -e ".[test]"
 	mkdir reports || true
 	$(ACTIVATE) $(LOCUST) -f tests/stress/api_stress.py --print-stats --html reports/stress-test.html --run-time 60s --headless --users 100 --spawn-rate 1 -H $(STRESS_URL)
 
