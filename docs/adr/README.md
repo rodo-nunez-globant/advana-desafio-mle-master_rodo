@@ -25,3 +25,4 @@ ADRs follow the SDD methodology by documenting decisions made during specificati
 | [004](004-cicd-workflow-implementation.md) | CI/CD Workflow Implementation | Accepted | 2025-01-14 |
 | [005](005-fastapi-api-implementation.md) | FastAPI API Implementation | Accepted | 2025-01-14 |
 | [006](006-uv-and-smart-makefile-adoption.md) | Adoption of uv and Smart Makefile | Accepted | 2025-01-14 |
+| [007](007-docker-and-gcp-cloud-run-deployment.md) | Docker Configuration and GCP Cloud Run Deployment | Accepted | 2025-01-14 |
