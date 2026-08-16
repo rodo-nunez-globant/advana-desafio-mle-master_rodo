@@ -1,0 +1,115 @@
+name: '🚀 Deploy Application'
+
+on:
+  push:
+    branches: [main]
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  SERVICE_NAME: flight-delay-api
+  REGION: us-central1
+
+jobs:
+  build-and-deploy:
+    name: 'Build and Deploy to Cloud Run'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+        
+      - name: Google Auth
+        id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
+          
+      - name: Set up Cloud SDK
+        uses: 'google-github-actions/setup-gcloud@v2'
+        with:
+          version: '>= 363.0.0'
+          
+      - name: Enable required APIs
+        run: |
+          gcloud services enable cloudbuild.googleapis.com run.googleapis.com --project=${{ env.PROJECT_ID }}
+          
+      - name: Build and deploy to Cloud Run
+        run: |
+          # Build using Cloud Build with our cloudbuild.yaml
+          gcloud builds submit \
+            --config=cloudbuild.yaml \
+            --substitutions=_SERVICE_NAME=${{ env.SERVICE_NAME }} \
+            --project=${{ env.PROJECT_ID }}
+            
+          # Deploy to Cloud Run
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image=gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }} \
+            --region=${{ env.REGION }} \
+            --platform=managed \
+            --allow-unauthenticated \
+            --memory=512Mi \
+            --cpu=1 \
+            --max-instances=10 \
+            --quiet \
+            --project=${{ env.PROJECT_ID }}
+            
+          # Get the deployed URL
+          DEPLOYED_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --region=${{ env.REGION }} \
+            --format='value(status.url)' \
+            --project=${{ env.PROJECT_ID }})
+            
+          echo "DEPLOYED_URL=${DEPLOYED_URL}" >> $GITHUB_ENV
+          
+      - name: Update Makefile with deployed URL
+        run: |
+          # Update STRESS_URL in Makefile
+          sed -i.bak "s|^STRESS_URL = .*|STRESS_URL = ${DEPLOYED_URL}|" Makefile
+          
+      - name: Commit and push URL update
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add Makefile
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "ci: Update deployed API URL"
+            git push
+          fi
+          
+      - name: Run health check
+        run: |
+          # Wait a moment for deployment to settle
+          sleep 10
+          curl -f ${DEPLOYED_URL}/health || exit 1
+          
+      - name: Run stress tests
+        run: |
+          # Install dependencies for stress testing
+          pip install locust
+          
+          # Run stress tests
+          mkdir -p reports
+          locust -f tests/stress/api_stress.py \
+            --print-stats \
+            --html reports/stress-test.html \
+            --run-time 60s \
+            --headless \
+            --users 100 \
+            --spawn-rate 1 \
+            -H ${DEPLOYED_URL}
+            
+      - name: Upload stress test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stress-test-report
+          path: reports/stress-test.html
+          retention-days: 30

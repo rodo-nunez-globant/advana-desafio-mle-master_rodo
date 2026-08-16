@@ -1,5 +1,8 @@
 # Software Engineer (ML & LLMs) Challenge
 
+[![CI](https://github.com/rodo-nunez-globant/advana-desafio-mle-master_rodo/actions/workflows/ci.yml/badge.svg)](https://github.com/rodo-nunez-globant/advana-desafio-mle-master_rodo/actions/workflows/ci.yml)
+[![CD](https://github.com/rodo-nunez-globant/advana-desafio-mle-master_rodo/actions/workflows/cd.yml/badge.svg)](https://github.com/rodo-nunez-globant/advana-desafio-mle-master_rodo/actions/workflows/cd.yml)
+
 ## Overview
 
 Welcome to the **Software Engineer (ML & LLMs)** Application Challenge. In this, you will have the opportunity to get closer to a part of the reality of the role, and demonstrate your skills and knowledge in machine learning and cloud.
@@ -164,6 +167,11 @@ We are looking for a proper `CI/CD` implementation for this development.
 
 - Create a new folder called `.github` and copy the `workflows` folder that we provided inside it.
 - Complete both `ci.yml` and `cd.yml`(consider what you did in the previous parts).
+- **NEW**: Implement Infrastructure as Code using Terraform for automated GCP resource management:
+  - Set up Workload Identity Federation for secure authentication
+  - Create service accounts and IAM policies
+  - Integrate with GitHub Actions for automated deployment
+  - Enable easy cleanup with `terraform destroy`
 
 ## Complete Setup and Testing Guide
 
@@ -305,21 +313,61 @@ make stress-test
 open reports/stress-test.html
 ```
 
-### 6. Part IV: CI/CD Setup
+### 6. Part IV: CI/CD Setup with Terraform
+
+#### Terraform Infrastructure Setup
+```bash
+# Setup Terraform infrastructure (one-time setup)
+make terraform-setup
+
+# Review the plan, then apply
+make terraform-apply
+
+# Get the outputs for GitHub setup
+make terraform-output
+```
+
+#### Configure GitHub Secrets
+After Terraform apply, add these secrets to your GitHub repository:
+1. Go to Settings → Secrets and variables → Actions
+2. Add these secrets from Terraform output:
+   - `GCP_PROJECT_ID`
+   - `GCP_WORKLOAD_IDENTITY_PROVIDER`
+   - `GCP_SERVICE_ACCOUNT_EMAIL`
+
+#### GitHub Repository Settings
+In your GitHub repository settings:
+1. Go to Settings → Actions → General
+2. Under "Workflow permissions":
+   - Select "Read and write permissions"
+   - Check "Allow GitHub Actions to create and approve pull requests"
+   - Check "Allow GitHub Actions to run approved pull requests from forks"
 
 #### GitHub Actions Setup
 ```bash
-# The workflows are already in place
-# Just push to GitHub to trigger CI/CD
+# The workflows are already configured
+# Push to trigger CI/CD
 
 git add .
-git commit -m "Complete implementation"
+git commit -m "Complete implementation with Terraform"
 git push origin main
 ```
 
 #### CI/CD Pipeline
 - **CI** (`ci.yml`): Runs on every push, tests code quality and functionality
 - **CD** (`cd.yml`): Deploys to Cloud Run on merges to main
+- **Terraform** (`terraform.yml`): Manages infrastructure with plan/apply workflow
+
+#### Terraform Commands
+```bash
+# Common Terraform operations
+make terraform-init      # Initialize Terraform
+make terraform-plan      # Plan changes
+make terraform-apply     # Apply changes
+make terraform-destroy   # Destroy all resources (cleanup)
+make terraform-validate  # Validate configuration
+make terraform-fmt       # Format code
+```
 
 ### 7. Troubleshooting
 
