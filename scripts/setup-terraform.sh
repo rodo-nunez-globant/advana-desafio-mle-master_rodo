@@ -99,9 +99,10 @@ echo ""
 echo "🔧 Initializing Terraform..."
 terraform init
 
-# Validate configuration
+# Format and validate configuration
 echo ""
-echo "✅ Validating Terraform configuration..."
+echo "✅ Formatting and validating Terraform configuration..."
+terraform fmt
 terraform validate
 
 # Show plan

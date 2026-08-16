@@ -4,7 +4,7 @@ terraform {
   backend "gcs" {
     bucket = "rodo-nunez-challenge-latam-data"
     prefix = "terraform/state"
-    
+
     # Optional: Enable state locking
     # Note: This requires the Cloud Storage API to be enabled
   }

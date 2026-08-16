@@ -5,9 +5,6 @@ resource "google_iam_workload_identity_pool" "github" {
   display_name             = var.workload_identity_pool_display_name
   description              = var.workload_identity_pool_description
   
-  # Location must be global for workload identity pools
-  location = "global"
-  
   # Enable the pool
   disabled = false
 }

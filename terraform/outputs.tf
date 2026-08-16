@@ -21,9 +21,9 @@ output "workload_identity_pool" {
 output "github_secrets" {
   description = "GitHub secrets configuration for setup"
   value = {
-    GCP_PROJECT_ID                = var.project_id
+    GCP_PROJECT_ID                 = var.project_id
     GCP_WORKLOAD_IDENTITY_PROVIDER = module.workload-identity.provider_name
-    GCP_SERVICE_ACCOUNT_EMAIL     = module.service-account.email
+    GCP_SERVICE_ACCOUNT_EMAIL      = module.service-account.email
   }
   sensitive = true
 }
@@ -31,8 +31,8 @@ output "github_secrets" {
 output "iam_bindings" {
   description = "IAM bindings applied to the service account"
   value = {
-    run_admin           = module.iam.run_admin_binding
-    cloudbuild_editor   = module.iam.cloudbuild_editor_binding
+    run_admin            = module.iam.run_admin_binding
+    cloudbuild_editor    = module.iam.cloudbuild_editor_binding
     service_account_user = module.iam.service_account_user_binding
   }
 }
