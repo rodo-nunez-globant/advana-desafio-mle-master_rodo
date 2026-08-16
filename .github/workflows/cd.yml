@@ -65,6 +65,10 @@ jobs:
             elif [ "$STATUS" = "FAILURE" ] || [ "$STATUS" = "TIMEOUT" ] || [ "$STATUS" = "CANCELLED" ]; then
               echo "Build failed with status: $STATUS"
               echo "Check logs at: https://console.cloud.google.com/cloud-build/builds/$BUILD_ID?project=${{ env.PROJECT_ID }}"
+              echo "Build details:"
+              gcloud builds describe $BUILD_ID --project=${{ env.PROJECT_ID }} --format='json' | jq '.steps[] | {name: name, status: status, timing: timing}'
+              echo "Last 100 lines of build log:"
+              gcloud builds log $BUILD_ID --project=${{ env.PROJECT_ID }} --limit=100 || true
               exit 1
             fi
             

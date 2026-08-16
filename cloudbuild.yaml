@@ -11,21 +11,16 @@ steps:
         
   # Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_SERVICE_NAME', '.']
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$SERVICE_NAME', '.']
   
-  # Verify data file exists in the image
-  - name: 'gcr.io/$PROJECT_ID/$_SERVICE_NAME'
-    entrypoint: 'sh'
-    args: 
-      - '-c'
-      - |
-        echo "Checking if data.csv exists..."
-        ls -la data/data.csv && echo "✅ data.csv found" || (echo "❌ data.csv missing!" && exit 1)
-        echo "Checking if model exists..."
-        ls -la models/delay_model.pkl && echo "✅ Model found" || echo "⚠️ Model not found (will be created during startup)"
+  # Push the Docker image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/$SERVICE_NAME']
 
-images:
-  - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME'
-
+# Define the substitutions
 substitutions:
-  _SERVICE_NAME: flight-delay-api
+  _SERVICE_NAME: 'flight-delay-api'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
