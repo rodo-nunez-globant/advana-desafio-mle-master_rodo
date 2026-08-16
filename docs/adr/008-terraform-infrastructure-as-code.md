@@ -1,7 +1,7 @@
 # ADR 008: Terraform Infrastructure as Code for GCP Deployment
 
 ## Status
-Proposed
+Approved
 
 ## Context
 For Part IV of the challenge, we need to implement CI/CD with automated deployment to GCP Cloud Run. The current manual setup for GCP authentication and service accounts is error-prone and difficult to reproduce. We need an Infrastructure as Code solution that:
