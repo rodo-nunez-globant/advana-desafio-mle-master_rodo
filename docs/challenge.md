@@ -58,9 +58,23 @@ After that, I started testing my CI/CD workflow, debuging a lot of problems.
 
 To save time, I added the public csv to Git LFS, but with more time, I would use the version I uploaded to my bucket.
 
-My CI test worked. My IaC CD failed but that was an extra i was working on, because I think it's useful, but I don't have more time to give it, since I have to prepare for a presentation. So I'll leave it there broken as a WIP.
+My CI test worked. My IaC CD failed but that was an extra i was working on, because I think it's useful, but I don't have more time to give it, since I have to prepare for a presentation. So I'll leave it there broken as a WIP. I commented out the terraform init, plan and apply for now.
 
 The challenge was really fun =) 
+
+There are many elements that we could work on for the future. Some of the are:
+
+- Improving test coverage
+- Using a model registry
+- Using a container registry
+- Using data.csv from bucket
+- Adding more tests
+- Optimizing the server in case the volume of requests grows
+- Finishing the terraform setup
+- Setting up continuous training 
+- Continuous monitoring
+- Obserbavility
+- And much more
 
 ## Model choice
 
