@@ -34,7 +34,10 @@ resource "google_project_iam_binding" "cloudbuild_editor" {
   ]
 }
 
-# Grant service account user role for impersonation
+# Grant service account user role for impersonation (RESTRICTED)
+# Note: This role is disabled by default for security reasons.
+# Only enable if absolutely necessary and consider using service account-specific
+# bindings instead of project-level bindings.
 resource "google_project_iam_binding" "service_account_user" {
   count = var.enable_service_account_user ? 1 : 0
   
@@ -44,6 +47,13 @@ resource "google_project_iam_binding" "service_account_user" {
   members = [
     local.service_account_member
   ]
+  
+  # Add condition to restrict to specific service accounts if needed
+  # condition {
+  #   title       = "Restricted service account access"
+  #   description = "Only allow impersonation of specific service accounts"
+  #   expression  = "resource.name.startsWith('projects/-/serviceAccounts/') && resource.name.endsWith('@my-project.iam.gserviceaccount.com')"
+  # }
 }
 
 # Additional IAM roles if specified

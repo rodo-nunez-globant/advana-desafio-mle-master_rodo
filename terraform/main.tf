@@ -41,7 +41,7 @@ module "iam" {
 
   enable_cloud_run_admin      = true
   enable_cloudbuild_editor    = true
-  enable_service_account_user = true
+  enable_service_account_user = false
 
   depends_on = [module.service-account]
 }

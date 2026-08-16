@@ -60,7 +60,8 @@
 **Dependencies:** 1.1, 1.2
 **Estimated Time:** 3 hours
 **Owner:** Infrastructure Lead
-**Status:** ✅ COMPLETED in commit 1ce47c3 (needs security fix)
+**Status:** ✅ COMPLETED in commit 1ce47c3
+**Security Fix:** Disabled service account user role by default to address Checkov CKV_GCP_14
 
 ### 1.5 Root Module Integration
 - [x] Update `terraform/main.tf` to call all modules
@@ -169,7 +170,7 @@
 ## Priority 4: Testing and Validation
 
 ### 4.1 Local Testing Setup
-- [ ] Create `terraform/test/` directory
+- [x] Create `terraform/test/` directory
 - [ ] Write unit tests for Terraform modules
 - [ ] Create test configuration files
 - [ ] Set up test automation with terratest
@@ -181,6 +182,7 @@
 **Dependencies:** 1.5
 **Estimated Time:** 5 hours
 **Owner:** QA Lead
+**Status:** ⚠️ PARTIALLY COMPLETED - Directory created in commit 1ce47c3
 
 ### 4.2 Security Scanning
 - [ ] Integrate Checkov for security scanning

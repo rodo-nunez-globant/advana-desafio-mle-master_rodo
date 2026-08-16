@@ -26,9 +26,9 @@ variable "enable_cloudbuild_editor" {
 }
 
 variable "enable_service_account_user" {
-  description = "Whether to grant service account user role"
+  description = "Whether to grant service account user role (DANGEROUS - allows impersonation)"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "additional_roles" {

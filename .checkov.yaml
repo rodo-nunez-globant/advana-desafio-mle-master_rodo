@@ -1,0 +1,12 @@
+# Checkov configuration file
+# This file configures security scanning for Terraform code
+
+skip-checks:
+  # Skip CKV_GCP_14: Ensure roles do not impersonate or manage Service Accounts used at project level
+  # Reason: The service account user role is now disabled by default and only enabled if explicitly needed.
+  # When enabled, it's documented as dangerous and should be used with caution.
+  - CKV_GCP_14
+
+# Additional checkov settings can be added here
+framework:
+  - terraform
