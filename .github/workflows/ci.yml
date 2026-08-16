@@ -1,4 +1,4 @@
-name: 'Continuous Integration'
+name: '🧪 Test and Validate Code'
 
 on:
   pull_request:

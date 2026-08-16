@@ -1,4 +1,4 @@
-name: 'Terraform Infrastructure'
+name: '🏗️ Deploy Infrastructure'
 
 on:
   pull_request:
