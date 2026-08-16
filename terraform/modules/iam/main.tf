@@ -77,20 +77,7 @@ resource "google_service_account_iam_binding" "self_impersonation" {
   count = var.enable_self_impersonation ? 1 : 0
 
   service_account_id = "projects/${var.project_id}/serviceAccounts/${var.service_account_email}"
-  role               = "roles/iam.serviceAccountTokenCreator"
-
-  members = [
-    local.service_account_member
-  ]
-}
-
-# Grant service account user role at project level
-# This is required for Terraform GCS backend authentication with Workload Identity
-resource "google_project_iam_binding" "service_account_token_creator" {
-  count = var.enable_self_impersonation ? 1 : 0
-
-  project = var.project_id
-  role    = "roles/iam.serviceAccountTokenCreator"
+  role               = "roles/iam.workloadIdentityUser"
 
   members = [
     local.service_account_member
