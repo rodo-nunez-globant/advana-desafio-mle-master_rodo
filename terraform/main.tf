@@ -41,6 +41,7 @@ module "iam" {
 
   enable_cloud_run_admin      = true
   enable_cloudbuild_editor    = true
+  enable_storage_access       = true
   enable_service_account_user = false
 
   depends_on = [module.service-account]
@@ -71,6 +72,13 @@ resource "google_project_service" "cloudbuild" {
 resource "google_project_service" "storage" {
   project = var.project_id
   service = "storage-component.googleapis.com"
+
+  disable_on_destroy = false
+}
+
+resource "google_project_service" "storage_api" {
+  project = var.project_id
+  service = "storage.googleapis.com"
 
   disable_on_destroy = false
 }

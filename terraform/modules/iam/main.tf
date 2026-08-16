@@ -36,6 +36,19 @@ resource "google_project_iam_binding" "cloudbuild_editor" {
   ]
 }
 
+# Grant Storage Object Viewer role for Terraform state bucket access
+# This is required for the service account to read/write Terraform state in GCS
+resource "google_project_iam_binding" "storage_object_viewer" {
+  count = var.enable_storage_access ? 1 : 0
+
+  project = var.project_id
+  role    = "roles/storage.objectViewer"
+
+  members = [
+    local.service_account_member
+  ]
+}
+
 # Grant service account user role for impersonation (RESTRICTED)
 # Note: This role is disabled by default for security reasons.
 # Only enable if absolutely necessary and consider using service account-specific

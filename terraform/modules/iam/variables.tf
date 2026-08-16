@@ -25,6 +25,12 @@ variable "enable_cloudbuild_editor" {
   default     = true
 }
 
+variable "enable_storage_access" {
+  description = "Whether to grant Storage Object Viewer role for Terraform state access"
+  type        = bool
+  default     = true
+}
+
 variable "enable_service_account_user" {
   description = "Whether to grant service account user role (DANGEROUS - allows impersonation)"
   type        = bool
