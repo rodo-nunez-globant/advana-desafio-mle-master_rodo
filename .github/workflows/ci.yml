@@ -26,7 +26,7 @@ jobs:
           version: "latest"
           
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/uv
           key: ${{ runner.os }}-uv-${{ hashFiles('pyproject.toml', 'uv.lock') }}
@@ -42,7 +42,7 @@ jobs:
           make model-test
           
       - name: Upload test artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: model-test-results
@@ -69,7 +69,7 @@ jobs:
           version: "latest"
           
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/uv
           key: ${{ runner.os }}-uv-${{ hashFiles('pyproject.toml', 'uv.lock') }}
@@ -85,7 +85,7 @@ jobs:
           make api-test
           
       - name: Upload test artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: api-test-results
@@ -113,7 +113,7 @@ jobs:
           version: "latest"
           
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/uv
           key: ${{ runner.os }}-uv-${{ hashFiles('pyproject.toml', 'uv.lock') }}
@@ -129,7 +129,7 @@ jobs:
           make stress-test
           
       - name: Upload stress test artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: stress-test-results
