@@ -29,8 +29,9 @@ resource "google_iam_workload_identity_pool_provider" "github" {
     "attribute.repository" = "assertion.repository"
   }
   
-  # Allow authentication from only this specific repository
-  attribute_condition = "attribute.repository == '${var.github_repo}'"
+  # Restrict authentication to specific repository and branch
+  # Only allow main branch and pull requests
+  attribute_condition = "attribute.repository == '${var.github_repo}' && (attribute.ref == 'refs/heads/main' || attribute.ref.startsWith('refs/pull/'))"
   
   # Enable the provider
   disabled = false
