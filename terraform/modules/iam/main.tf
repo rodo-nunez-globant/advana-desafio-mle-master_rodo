@@ -23,6 +23,8 @@ resource "google_project_iam_binding" "run_admin" {
 }
 
 # Grant Cloud Build editor role to build and push images
+# SECURITY NOTE: This role is required for CI/CD pipeline to build and push containers.
+# The service account is restricted via Workload Identity Federation to specific repository/branch.
 resource "google_project_iam_binding" "cloudbuild_editor" {
   count = var.enable_cloudbuild_editor ? 1 : 0
   

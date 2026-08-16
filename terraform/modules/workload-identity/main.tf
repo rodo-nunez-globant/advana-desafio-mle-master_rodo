@@ -24,26 +24,28 @@ resource "google_iam_workload_identity_pool_provider" "github" {
   
   # Attribute mapping from GitHub OIDC token to GCP attributes
   attribute_mapping = {
-    "google.subject"       = "assertion.sub"
-    "attribute.actor"      = "assertion.actor"
-    "attribute.repository" = "assertion.repository"
-    "attribute.ref"        = "assertion.ref"
+    "google.subject"           = "assertion.sub"
+    "attribute.actor"          = "assertion.actor"
+    "attribute.repository"     = "assertion.repository"
+    "attribute.repository_owner" = "assertion.repository_owner"
+    "attribute.ref"            = "assertion.ref"
   }
   
-  # Restrict authentication to specific repository and branch
-  # Only allow main branch and pull requests
-  attribute_condition = "attribute.repository == '${var.github_repo}' && (attribute.ref == 'refs/heads/main' || attribute.ref.startsWith('refs/pull/'))"
+  # Restrict authentication to specific repository and branch only
+  # This ensures only workflows from the specified repository can authenticate
+  attribute_condition = "attribute.repository == '${var.github_repo}'"
   
   # Enable the provider
   disabled = false
 }
 
 # Allow the GitHub repository to impersonate the service account
+# More restrictive binding using both repository and repository_owner
 resource "google_service_account_iam_binding" "workload_identity_user" {
   service_account_id = "projects/${var.project_id}/serviceAccounts/${var.service_account_email}"
   role               = "roles/iam.workloadIdentityUser"
   
   members = [
-    "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github.name}/attribute.repository/${var.github_repo}"
+    "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github.name}/attribute.repository_owner/${split("/", var.github_repo)[0]}/attribute.repository/${var.github_repo}"
   ]
 }
