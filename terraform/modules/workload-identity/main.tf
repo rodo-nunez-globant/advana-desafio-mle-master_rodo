@@ -38,7 +38,7 @@ resource "google_iam_workload_identity_pool_provider" "github" {
 
 # Allow the GitHub repository to impersonate the service account
 resource "google_service_account_iam_binding" "workload_identity_user" {
-  service_account_id = var.service_account_email
+  service_account_id = "projects/${var.project_id}/serviceAccounts/${var.service_account_email}"
   role               = "roles/iam.workloadIdentityUser"
   
   members = [
