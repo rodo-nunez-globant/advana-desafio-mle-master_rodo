@@ -50,6 +50,8 @@ Then, I checked the predictions distribution, to make sure the model was not ret
 
 That's enough for a localhost version. We can now start deploying this API to CGP
 
+Then, I worked on deploying to GCP. I created an account with my personal e-mail, I set up a new project with billing activated. I asked an agent to generate templates to easily connect to my project and deploy. I had to debug a couple details. After a while, I managed to build a docker image locally and push it to Google Cloud Run. I ran the stress test, and after solving a couple dependency problems, it worked.
+
 ## Model choice
 
 Depending on the business objective, it could be more important to identify as many positives as posible (delayed flights), or it could be more important to make sure our positive predictions are correct. My guess is that for this case, we care more about the first case, that means, we need a high recall. Depending on how much important is to minimize false negatives versus false positives, I would chose which F-Beta score to add to the table. Maybe F-2 or F-3 score could be good.

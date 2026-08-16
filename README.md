@@ -165,33 +165,242 @@ We are looking for a proper `CI/CD` implementation for this development.
 - Create a new folder called `.github` and copy the `workflows` folder that we provided inside it.
 - Complete both `ci.yml` and `cd.yml`(consider what you did in the previous parts).
 
-## Real Model Implementation ✅
+## Complete Setup and Testing Guide
 
-The API now uses a **real trained model** instead of dummy predictions!
+This guide walks you through setting up the environment and testing all parts of the challenge.
 
-### How it works:
-- Uses the existing `DelayModel` class in `challenge/model.py`
-- Trained on 68,206 real flights from `data/data.csv`
-- Model saved to `models/delay_model.pkl` and loaded by API
+### Prerequisites
 
-### Train the model:
+- Python 3.13 (required)
+- Git
+- Google Cloud Account (for Part III)
+- Docker (optional, for container testing)
+
+### 1. Environment Setup
+
+#### Install uv (recommended for faster dependency management)
 ```bash
-# Train using existing DelayModel class
-uv run python challenge/train_model.py
+# macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Start API with real model
-uv run uvicorn challenge.api:app --reload
+# Windows (PowerShell)
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Verify installation
+uv --version
 ```
 
-### Test predictions:
+#### Clone and setup the project
 ```bash
-# Health check (shows model_loaded: true)
+git clone <your-repo-url>
+cd advana-desafio-mle-master_rodo
+
+# Install all dependencies (recommended for developers)
+uv sync --all-extras
+
+# Or install minimal dependencies (for just running the API)
+uv sync
+```
+
+### 2. Part I: Model Implementation
+
+#### Train the model
+```bash
+# Train the model using the existing script
+uv run python challenge/train_model.py
+```
+This will:
+- Load data from `data/data.csv`
+- Train the model using the `DelayModel` class
+- Save the trained model to `models/delay_model.pkl`
+
+#### Test the model
+```bash
+# Run model tests
+make model-test
+
+# View test coverage report
+open reports/html/index.html
+```
+
+### 3. Part II: Local API Testing
+
+#### Start the API locally
+```bash
+# Development mode with auto-reload
+uv run uvicorn challenge.api:app --reload --port 8000
+
+# Or use the Makefile
+make run
+```
+
+#### Test the API endpoints
+```bash
+# Health check
 curl http://localhost:8000/health
 
-# Real prediction
+# Test prediction
 curl -X POST http://localhost:8000/predict \
   -H "Content-Type: application/json" \
   -d '{"flights": [{"OPERA": "Grupo LATAM", "TIPOVUELO": "I", "MES": 7}]}'
+
+# Run API tests
+make api-test
 ```
 
-The model learns patterns from real flight data to predict delays based on airline, month, and flight type.
+### 4. Docker Testing (Optional but Recommended)
+
+#### Build and test locally
+```bash
+# Build the Docker image
+docker build -t flight-delay-api:test .
+
+# Run the container
+docker run -p 8080:8080 flight-delay-api:test
+
+# Test the containerized API
+curl http://localhost:8080/health
+```
+
+### 5. Part III: GCP Cloud Run Deployment
+
+#### Setup GCP Project
+```bash
+# Install gcloud CLI if not already installed
+curl https://sdk.cloud.google.com | bash
+exec -l $SHELL
+
+# Login and set project
+gcloud auth login
+gcloud config set project YOUR_PROJECT_ID
+
+# Replace YOUR_PROJECT_ID in deploy/gcp-deploy.sh
+# Edit the file and change PROJECT_ID="your-gcp-project-id"
+```
+
+#### Deploy to Cloud Run
+```bash
+# Deploy using the automated script
+make deploy
+
+# Or manually
+./deploy/gcp-deploy.sh
+```
+
+The deployment script will:
+- Enable required GCP APIs (Cloud Build, Cloud Run)
+- Build the Docker image on Google Cloud Build
+- Deploy to Cloud Run
+- Update the Makefile with the deployed URL
+
+#### Test the deployed API
+```bash
+# The deployment script updates this automatically
+make health-check
+
+# Run stress tests against deployed API
+make stress-test
+
+# View stress test report
+open reports/stress-test.html
+```
+
+### 6. Part IV: CI/CD Setup
+
+#### GitHub Actions Setup
+```bash
+# The workflows are already in place
+# Just push to GitHub to trigger CI/CD
+
+git add .
+git commit -m "Complete implementation"
+git push origin main
+```
+
+#### CI/CD Pipeline
+- **CI** (`ci.yml`): Runs on every push, tests code quality and functionality
+- **CD** (`cd.yml`): Deploys to Cloud Run on merges to main
+
+### 7. Troubleshooting
+
+#### Common Issues
+
+**uv command not found**
+```bash
+# Install uv first
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+**Permission denied on gcloud**
+```bash
+# Authenticate with GCP
+gcloud auth login
+gcloud auth application-default login
+```
+
+**Docker build fails with data not found**
+```bash
+# Check .gcloudignore doesn't exclude data/
+cat .gcloudignore
+# Ensure data/ is not excluded
+```
+
+**Stress test fails with locust not found**
+```bash
+# Install test dependencies
+uv sync --extra test
+# The Makefile now does this automatically
+```
+
+### 8. Quick Commands Reference
+
+```bash
+# Development
+make run              # Start API locally
+make test             # Run all tests
+make model-test       # Test model only
+make api-test         # Test API only
+make lint             # Code quality checks
+
+# Deployment
+make deploy           # Deploy to GCP Cloud Run
+make health-check     # Check deployed API
+make stress-test      # Load test deployed API
+
+# Docker
+docker build -t flight-delay-api .
+docker run -p 8080:8080 flight-delay-api
+```
+
+### 9. Submitting Your Challenge
+
+Once all parts are complete and tested:
+
+1. Ensure your API is deployed and passing stress tests
+2. Update the submission details:
+   ```json
+   {
+     "name": "Your Name",
+     "mail": "your.email@example.com",
+     "github_url": "https://github.com/yourusername/your-repo.git",
+     "api_url": "https://your-deployed-api-url.a.run.app"
+   }
+   ```
+3. Submit to: `https://advana-challenge-check-api-cr-k4hdbggvoq-uc.a.run.app/software-engineer`
+
+### 10. Project Structure for Reviewers
+
+```
+├── challenge/           # Core implementation
+│   ├── model.py       # Part I: Model implementation
+│   ├── api.py         # Part II: FastAPI implementation
+│   └── train_model.py # Model training script
+├── data/              # Training data
+├── models/            # Trained model (.pkl files)
+├── tests/             # All test suites
+├── deploy/            # Deployment scripts
+├── .github/workflows/ # CI/CD configuration
+└── Makefile          # All commands and URLs
+```
+
+The Makefile contains all necessary commands and will be updated with your deployed API URL after running `make deploy`.

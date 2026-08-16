@@ -1,0 +1,54 @@
+# Include everything by default, then exclude specific items
+# This ensures the data/ directory is included
+
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+.venv/
+.venv
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+reports/
+.sdd/
+sandbox/
+node_modules/
+*.egg-info/
+
+# Documentation (keep source files)
+docs/
+*.md
+!README.md
+
+# Test files
+tests/
+
+# IMPORTANT: Explicitly include data directory
+!data/
