@@ -31,7 +31,7 @@ resource "google_iam_workload_identity_pool_provider" "github" {
     "attribute.ref"              = "assertion.ref"
   }
 
-  # Restrict authentication to specific repository and branch only
+  # Restrict authentication to specific repository only
   # This ensures only workflows from the specified repository can authenticate
   attribute_condition = "attribute.repository == '${var.github_repo}'"
 
@@ -46,6 +46,6 @@ resource "google_service_account_iam_binding" "workload_identity_user" {
   role               = "roles/iam.workloadIdentityUser"
 
   members = [
-    "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github.name}/attribute.repository_owner/${split("/", var.github_repo)[0]}/attribute.repository/${var.github_repo}"
+    "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github.name}/attribute.repository/${var.github_repo}"
   ]
 }

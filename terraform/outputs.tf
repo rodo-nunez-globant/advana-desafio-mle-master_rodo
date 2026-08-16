@@ -40,15 +40,25 @@ output "iam_bindings" {
 output "setup_commands" {
   description = "Commands to set up GitHub repository"
   value = [
-    "echo 'Add these secrets to your GitHub repository:'",
-    "echo 'GCP_PROJECT_ID: ${var.project_id}'",
-    "echo 'GCP_WORKLOAD_IDENTITY_PROVIDER: ${module.workload-identity.provider_name}'",
-    "echo 'GCP_SERVICE_ACCOUNT_EMAIL: ${module.service-account.email}'",
+    "echo '=== GitHub Repository Setup ==='",
+    "echo '1. Add these secrets to your GitHub repository:'",
+    "echo '   GCP_PROJECT_ID: ${var.project_id}'",
+    "echo '   GCP_WORKLOAD_IDENTITY_PROVIDER: ${module.workload-identity.provider_name}'",
+    "echo '   GCP_SERVICE_ACCOUNT_EMAIL: ${module.service-account.email}'",
     "",
-    "echo 'Then add this to your GitHub repository settings:'",
-    "echo 'Settings > Actions > General > Workflow permissions'",
-    "echo '- Read and write permissions'",
-    "echo '- Allow GitHub Actions to create and approve pull requests'",
-    "echo '- Allow GitHub Actions to run approved pull requests from forks'"
+    "echo '2. Configure GitHub repository permissions:'",
+    "echo '   Settings > Actions > General > Workflow permissions'",
+    "echo '   - Read and write permissions'",
+    "echo '   - Allow GitHub Actions to create and approve pull requests'",
+    "echo '   - Allow GitHub Actions to run approved pull requests from forks'",
+    "",
+    "echo '3. Verify the workload identity provider:'",
+    "echo '   gcloud iam workload-identity-pools providers describe ${module.workload-identity.provider_id}'",
+    "echo '     --workload-identity-pool=${module.workload-identity.pool_id}'",
+    "echo '     --location=global --project=${var.project_id}'",
+    "",
+    "echo '4. Test the configuration:'",
+    "echo '   gcloud iam service-accounts impersonate-service-account ${module.service-account.email}'",
+    "echo '     --project=${var.project_id} -- gcloud projects list'"
   ]
 }
