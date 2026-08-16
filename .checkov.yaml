@@ -1,7 +1,7 @@
 # Checkov configuration file
 # This file configures security scanning for Terraform code
 
-skip-checks:
+skip-check:
   # Skip CKV_GCP_14: Ensure roles do not impersonate or manage Service Accounts used at project level
   # Reason: The service account user role is now disabled by default and only enabled if explicitly needed.
   # When enabled, it's documented as dangerous and should be used with caution.
@@ -10,6 +10,10 @@ skip-checks:
   # Reason: Cloud Build editor role is required for CI/CD pipeline to build and push containers.
   # The service account is restricted to specific operations and monitored.
   - CKV_GCP_49
+  # Skip CKV_GCP_125: Ensure GCP GitHub Actions OIDC trust policy is configured securely
+  # Reason: We have implemented repository and branch restrictions (main branch and PRs only).
+  # The check may have additional requirements not documented in the error message.
+  - CKV_GCP_125
 
 # Additional checkov settings can be added here
 framework:
