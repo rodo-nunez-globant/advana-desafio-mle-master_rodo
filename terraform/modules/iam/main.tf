@@ -6,14 +6,14 @@ locals {
 # Grant Cloud Run admin role to manage Cloud Run services
 resource "google_project_iam_binding" "run_admin" {
   count = var.enable_cloud_run_admin ? 1 : 0
-  
+
   project = var.project_id
   role    = "roles/run.admin"
-  
+
   members = [
     local.service_account_member
   ]
-  
+
   # Add condition to restrict to specific resources if needed
   # condition {
   #   title       = "Cloud Run management"
@@ -27,10 +27,10 @@ resource "google_project_iam_binding" "run_admin" {
 # The service account is restricted via Workload Identity Federation to specific repository/branch.
 resource "google_project_iam_binding" "cloudbuild_editor" {
   count = var.enable_cloudbuild_editor ? 1 : 0
-  
+
   project = var.project_id
   role    = "roles/cloudbuild.builds.editor"
-  
+
   members = [
     local.service_account_member
   ]
@@ -42,14 +42,14 @@ resource "google_project_iam_binding" "cloudbuild_editor" {
 # bindings instead of project-level bindings.
 resource "google_project_iam_binding" "service_account_user" {
   count = var.enable_service_account_user ? 1 : 0
-  
+
   project = var.project_id
   role    = "roles/iam.serviceAccountUser"
-  
+
   members = [
     local.service_account_member
   ]
-  
+
   # Add condition to restrict to specific service accounts if needed
   # condition {
   #   title       = "Restricted service account access"
@@ -61,9 +61,9 @@ resource "google_project_iam_binding" "service_account_user" {
 # Additional IAM roles if specified
 resource "google_project_iam_binding" "additional" {
   for_each = var.additional_roles
-  
+
   project = var.project_id
   role    = each.value.role
-  
+
   members = each.value.members
 }
