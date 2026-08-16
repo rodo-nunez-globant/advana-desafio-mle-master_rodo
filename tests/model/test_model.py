@@ -33,6 +33,11 @@ class TestModel(unittest.TestCase):
         current_dir = os.path.dirname(os.path.abspath(__file__))
         project_root = os.path.dirname(os.path.dirname(current_dir))
         data_path = os.path.join(project_root, "data", "data.csv")
+        
+        # Check if data file exists
+        if not os.path.exists(data_path):
+            raise FileNotFoundError(f"Data file not found at: {data_path}")
+        
         self.data = pd.read_csv(filepath_or_buffer=data_path, low_memory=False)
         
 

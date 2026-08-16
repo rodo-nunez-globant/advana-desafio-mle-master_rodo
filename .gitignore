@@ -47,7 +47,9 @@ htmlcov/
 *.joblib
 *.model
 *.h5
+# Ignore all CSV files except the challenge data
 *.csv
+!data/data.csv
 
 # Terraform
 terraform/.terraform/
