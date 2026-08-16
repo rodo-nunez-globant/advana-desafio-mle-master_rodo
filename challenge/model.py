@@ -48,19 +48,30 @@ class DelayModel:
             or
             pd.DataFrame: features.
         """
+        # Debug logging
+        print(f"\n=== MODEL PREPROCESS DEBUG ===")
+        print(f"Input data type: {type(data)}")
+        print(f"Input data shape: {data.shape if hasattr(data, 'shape') else 'N/A'}")
+        print(f"Input data columns: {list(data.columns) if hasattr(data, 'columns') else 'N/A'}")
+        print(f"Target column: {target_column}")
+        print(f"Required columns: {self._required_columns}")
+        
         # Input validation
         if data.empty:
             raise ValueError("Input data is empty")
         
         # Determine mode: training if target_column is provided, prediction otherwise
         is_training_mode = target_column is not None
+        print(f"Is training mode: {is_training_mode}")
         
         # Check if we have date columns
         has_dates = all(col in data.columns for col in ['Fecha-I', 'Fecha-O'])
+        print(f"Has date columns: {has_dates}")
         
         if is_training_mode:
             # Training mode: require all columns including dates
             missing_columns = [col for col in self._required_columns if col not in data.columns]
+            print(f"Missing columns in training mode: {missing_columns}")
             if missing_columns:
                 raise ValueError(f"Missing required columns: {missing_columns}")
             if not has_dates:
@@ -69,8 +80,10 @@ class DelayModel:
             # Prediction mode: only need the categorical columns
             required_prediction_cols = ['OPERA', 'MES', 'TIPOVUELO']
             missing_columns = [col for col in required_prediction_cols if col not in data.columns]
+            print(f"Missing columns in prediction mode: {missing_columns}")
             if missing_columns:
                 raise ValueError(f"Missing required columns: {missing_columns}")
+        print(f"============================\n")
         
         # Make a copy to avoid modifying original data
         data = data.copy()
