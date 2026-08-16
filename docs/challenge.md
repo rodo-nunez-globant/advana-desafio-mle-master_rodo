@@ -60,6 +60,8 @@ To save time, I added the public csv to Git LFS, but with more time, I would use
 
 My CI test worked. My IaC CD failed but that was an extra i was working on, because I think it's useful, but I don't have more time to give it, since I have to prepare for a presentation. So I'll leave it there broken as a WIP. I commented out the terraform init, plan and apply for now.
 
+After debugging a lot, CD is working. It was late, so I did some messy vibe debugging that I would check with more care with more time.
+
 The challenge was really fun =) 
 
 There are many elements that we could work on for the future. Some of the are:
