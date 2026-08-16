@@ -12,6 +12,7 @@ ifeq ($(UV_AVAILABLE),)
     PYTEST := pytest
     RUFF := ruff
     UVICORN := uvicorn
+    LOCUST := locust
 else
     PYTHON_CMD := uv run python
     PIP_CMD := uv pip
@@ -22,6 +23,7 @@ else
     PYTEST := uv run pytest
     RUFF := uv run ruff
     UVICORN := uv run uvicorn
+    LOCUST := uv run locust
 endif
 
 .PHONY: help
@@ -79,11 +81,13 @@ install-dev:		## Install development dependencies
 	@echo "Installing development dependencies..."
 	$(ACTIVATE) $(INSTALL_DEV)
 
-STRESS_URL = http://127.0.0.1:8000 
+STRESS_URL = https://flight-delay-api-jfxmsxnaja-uc.a.run.app
 .PHONY: stress-test
 stress-test:			## Run stress tests (change stress url to your deployed app)
+	@echo "Installing test dependencies..."
+	$(ACTIVATE) $(PIP_CMD) install -e ".[test]"
 	mkdir reports || true
-	$(ACTIVATE) locust -f tests/stress/api_stress.py --print-stats --html reports/stress-test.html --run-time 60s --headless --users 100 --spawn-rate 1 -H $(STRESS_URL)
+	$(ACTIVATE) $(LOCUST) -f tests/stress/api_stress.py --print-stats --html reports/stress-test.html --run-time 60s --headless --users 100 --spawn-rate 1 -H $(STRESS_URL)
 
 .PHONY: model-test
 model-test:			## Run model tests and coverage
