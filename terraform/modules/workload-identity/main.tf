@@ -29,8 +29,8 @@ resource "google_iam_workload_identity_pool_provider" "github" {
     "attribute.repository" = "assertion.repository"
   }
   
-  # Allow authentication from GitHub
-  attribute_condition = var.github_owner != "" ? "attribute.repository.startsWith('${var.github_owner}/')" : null
+  # Allow authentication from only this specific repository
+  attribute_condition = "attribute.repository == '${var.github_repo}'"
   
   # Enable the provider
   disabled = false

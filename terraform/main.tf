@@ -1,6 +1,5 @@
-# Extract GitHub owner from repository if not provided
+# Extract GitHub repository name
 locals {
-  github_owner     = var.github_owner != "" ? var.github_owner : split("/", var.github_repo)[0]
   github_repo_name = split("/", var.github_repo)[1]
 }
 
@@ -27,7 +26,6 @@ module "workload-identity" {
   workload_identity_provider_description  = "Workload identity provider for GitHub"
 
   github_repo           = var.github_repo
-  github_owner          = local.github_owner
   service_account_email = module.service-account.email
 
   depends_on = [module.service-account]

@@ -44,11 +44,6 @@ variable "github_repo" {
   type        = string
 }
 
-variable "github_owner" {
-  description = "GitHub owner/organization"
-  type        = string
-  default     = ""
-}
 
 variable "service_account_email" {
   description = "Email of the service account to link"
