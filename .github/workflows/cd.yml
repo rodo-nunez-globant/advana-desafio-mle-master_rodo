@@ -71,7 +71,7 @@ jobs:
               echo "Build details:"
               gcloud builds describe $BUILD_ID --project=${{ env.PROJECT_ID }} --format='json' | jq '.steps[]? | {name: .name, status: .status, timing: .timing}' 2>/dev/null || echo "Could not parse build details"
               echo "Last 100 lines of build log:"
-              gcloud builds log $BUILD_ID --project=${{ env.PROJECT_ID }} --limit=100 || true
+              gcloud builds log $BUILD_ID --project=${{ env.PROJECT_ID }} | tail -100 || true
               exit 1
             fi
             
