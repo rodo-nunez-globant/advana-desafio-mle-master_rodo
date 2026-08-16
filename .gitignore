@@ -88,9 +88,9 @@ data/external/*
 !data/processed/README.md
 !data/external/README.md
 
-# Model artifacts
-models/*
-!models/README.md
+# Model artifacts (temporarily commented out for deployment)
+# models/*
+# !models/README.md
 
 # Output directories
 outputs/*
