@@ -43,6 +43,7 @@ module "iam" {
   enable_cloudbuild_editor    = true
   enable_storage_access       = true
   enable_service_account_user = false
+  enable_self_impersonation   = true
 
   depends_on = [module.service-account]
 }

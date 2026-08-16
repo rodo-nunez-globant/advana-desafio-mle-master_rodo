@@ -71,6 +71,19 @@ resource "google_project_iam_binding" "service_account_user" {
   # }
 }
 
+# Grant self-impersonation role for Workload Identity
+# This allows the service account to get access tokens for itself (required for Terraform state access)
+resource "google_service_account_iam_binding" "self_impersonation" {
+  count = var.enable_self_impersonation ? 1 : 0
+
+  service_account_id = "projects/${var.project_id}/serviceAccounts/${var.service_account_email}"
+  role               = "roles/iam.workloadIdentityUser"
+
+  members = [
+    local.service_account_member
+  ]
+}
+
 # Additional IAM roles if specified
 resource "google_project_iam_binding" "additional" {
   for_each = var.additional_roles

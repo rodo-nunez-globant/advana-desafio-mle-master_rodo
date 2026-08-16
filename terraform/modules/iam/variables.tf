@@ -37,6 +37,12 @@ variable "enable_service_account_user" {
   default     = false
 }
 
+variable "enable_self_impersonation" {
+  description = "Whether to grant self-impersonation role for Workload Identity (required for Terraform state access)"
+  type        = bool
+  default     = true
+}
+
 variable "additional_roles" {
   description = "Additional IAM roles to grant"
   type = map(object({
