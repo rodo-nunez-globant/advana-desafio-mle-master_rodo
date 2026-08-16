@@ -58,6 +58,10 @@ After that, I started testing my CI/CD workflow, debuging a lot of problems.
 
 To save time, I added the public csv to Git LFS, but with more time, I would use the version I uploaded to my bucket.
 
+My CI test worked. My IaC CD failed but that was an extra i was working on, because I think it's useful, but I don't have more time to give it, since I have to prepare for a presentation. So I'll leave it there broken as a WIP.
+
+The challenge was really fun =) 
+
 ## Model choice
 
 Depending on the business objective, it could be more important to identify as many positives as posible (delayed flights), or it could be more important to make sure our positive predictions are correct. My guess is that for this case, we care more about the first case, that means, we need a high recall. Depending on how much important is to minimize false negatives versus false positives, I would chose which F-Beta score to add to the table. Maybe F-2 or F-3 score could be good.
