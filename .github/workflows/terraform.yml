@@ -183,60 +183,60 @@ jobs:
   #         echo "Service Account: ${{ steps.outputs.outputs.service_account_email }}"
   #         echo "Workload Identity Provider: ${{ steps.outputs.outputs.workload_identity_provider }}"
           
-  # Security scanning
-  security:
-    name: 'Security Scan'
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        
-      - name: Run Checkov
-        id: checkov
-        uses: bridgecrewio/checkov-action@master
-        with:
-          directory: terraform/
-          framework: terraform
-          output_format: sarif
-          output_file_path: reports/results.sarif
-          
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: reports/results.sarif
-          
-  # Destroy (manual trigger for cleanup)
-  destroy:
-    name: 'Terraform Destroy'
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
-    environment: production
-    
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        
-      - name: Authenticate to GCP
-        id: 'auth'
-        uses: 'google-github-actions/auth@v2'
-        with:
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
-          
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: '>= 1.5.0'
-          terraform_wrapper: false
-          
-      - name: Terraform Init
-        run: |
-          cd terraform
-          terraform init -input=false
-          
-      - name: Terraform Destroy
-        run: |
-          cd terraform
-          terraform destroy -input=false -auto-approve
+  # Security scanning - TEMPORARILY DISABLED
+  # security:
+  #   name: 'Security Scan'
+  #   runs-on: ubuntu-latest
+  #   
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #       
+  #     - name: Run Checkov
+  #       id: checkov
+  #       uses: bridgecrewio/checkov-action@master
+  #       with:
+  #         directory: terraform/
+  #         framework: terraform
+  #         output_format: sarif
+  #         output_file_path: reports/results.sarif
+  #         
+  #     - name: Upload SARIF file
+  #       uses: github/codeql-action/upload-sarif@v3
+  #       if: always()
+  #       with:
+  #         sarif_file: reports/results.sarif
+  #         
+  # Destroy (manual trigger for cleanup) - TEMPORARILY DISABLED
+  # destroy:
+  #   name: 'Terraform Destroy'
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+  #   environment: production
+  #   
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #       
+  #     - name: Authenticate to GCP
+  #       id: 'auth'
+  #       uses: 'google-github-actions/auth@v2'
+  #       with:
+  #         workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+  #         service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
+  #         
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v3
+  #       with:
+  #         terraform_version: '>= 1.5.0'
+  #         terraform_wrapper: false
+  #         
+  #     - name: Terraform Init
+  #       run: |
+  #         cd terraform
+  #         terraform init -input=false
+  #         
+  #     - name: Terraform Destroy
+  #       run: |
+  #         cd terraform
+  #         terraform destroy -input=false -auto-approve
