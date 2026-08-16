@@ -41,11 +41,35 @@ jobs:
           
       - name: Build and deploy to Cloud Run
         run: |
-          # Build using Cloud Build with our cloudbuild.yaml
-          gcloud builds submit \
+          # Submit build asynchronously and get build ID
+          BUILD_ID=$(gcloud builds submit \
             --config=cloudbuild.yaml \
             --substitutions=_SERVICE_NAME=${{ env.SERVICE_NAME }} \
-            --project=${{ env.PROJECT_ID }}
+            --project=${{ env.PROJECT_ID }} \
+            --format='value(id)' \
+            --async)
+          
+          echo "Build submitted with ID: $BUILD_ID"
+          
+          # Wait for build to complete (polling)
+          while true; do
+            STATUS=$(gcloud builds describe $BUILD_ID \
+              --project=${{ env.PROJECT_ID }} \
+              --format='value(status)')
+            
+            echo "Build status: $STATUS"
+            
+            if [ "$STATUS" = "SUCCESS" ]; then
+              echo "Build completed successfully!"
+              break
+            elif [ "$STATUS" = "FAILURE" ] || [ "$STATUS" = "TIMEOUT" ] || [ "$STATUS" = "CANCELLED" ]; then
+              echo "Build failed with status: $STATUS"
+              echo "Check logs at: https://console.cloud.google.com/cloud-build/builds/$BUILD_ID?project=${{ env.PROJECT_ID }}"
+              exit 1
+            fi
+            
+            sleep 10
+          done
             
           # Deploy to Cloud Run
           gcloud run deploy ${{ env.SERVICE_NAME }} \
