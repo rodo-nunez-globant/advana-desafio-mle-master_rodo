@@ -89,6 +89,52 @@ stress-test:			## Run stress tests (change stress url to your deployed app)
 	mkdir reports || true
 	$(ACTIVATE) $(LOCUST) -f tests/stress/api_stress.py --print-stats --html reports/stress-test.html --run-time 60s --headless --users 100 --spawn-rate 1 -H $(STRESS_URL)
 
+# Terraform targets
+.PHONY: terraform-init
+terraform-init:		## Initialize Terraform
+	@echo "Initializing Terraform..."
+	cd terraform && terraform init
+
+.PHONY: terraform-plan
+terraform-plan:		## Plan Terraform changes
+	@echo "Planning Terraform changes..."
+	cd terraform && terraform plan
+
+.PHONY: terraform-apply
+terraform-apply:		## Apply Terraform changes
+	@echo "Applying Terraform changes..."
+	cd terraform && terraform apply -auto-approve
+
+.PHONY: terraform-destroy
+terraform-destroy:		## Destroy Terraform resources
+	@echo "Destroying Terraform resources..."
+	@echo "Are you sure? Press Ctrl+C to cancel..."
+	sleep 5
+	cd terraform && terraform destroy -auto-approve
+
+.PHONY: terraform-validate
+terraform-validate:		## Validate Terraform configuration
+	@echo "Validating Terraform configuration..."
+	cd terraform && terraform validate
+
+.PHONY: terraform-fmt
+terraform-fmt:		## Format Terraform code
+	@echo "Formatting Terraform code..."
+	cd terraform && terraform fmt
+
+.PHONY: terraform-output
+terraform-output:		## Show Terraform outputs
+	@echo "Terraform outputs:"
+	cd terraform && terraform output
+
+.PHONY: terraform-setup
+terraform-setup:		## Setup Terraform infrastructure
+	@echo "Setting up Terraform infrastructure..."
+	$(MAKE) terraform-init
+	$(MAKE) terraform-plan
+	@echo ""
+	@echo "Review the plan above, then run 'make terraform-apply' to apply changes"
+
 .PHONY: model-test
 model-test:			## Run model tests and coverage
 	mkdir reports || true
