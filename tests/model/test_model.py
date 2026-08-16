@@ -34,28 +34,10 @@ class TestModel(unittest.TestCase):
         project_root = os.path.dirname(os.path.dirname(current_dir))
         data_path = os.path.join(project_root, "data", "data.csv")
         
-        # Debug logging
-        print(f"\n=== DEBUG INFO ===")
-        print(f"Current directory: {current_dir}")
-        print(f"Project root: {project_root}")
-        print(f"Data path: {data_path}")
-        print(f"Data file exists: {os.path.exists(data_path)}")
-        print(f"Working directory: {os.getcwd()}")
-        
-        # List files in data directory
-        data_dir = os.path.join(project_root, "data")
-        if os.path.exists(data_dir):
-            print(f"Files in data directory: {os.listdir(data_dir)}")
-        
         if os.path.exists(data_path):
             self.data = pd.read_csv(filepath_or_buffer=data_path, low_memory=False)
-            print(f"Data loaded successfully!")
-            print(f"Data shape: {self.data.shape}")
-            print(f"Data columns: {list(self.data.columns)}")
-            print(f"First few rows:\n{self.data.head()}")
         else:
             raise FileNotFoundError(f"Data file not found at: {data_path}")
-        print(f"==================\n")
         
 
     def test_model_preprocess_for_training(
