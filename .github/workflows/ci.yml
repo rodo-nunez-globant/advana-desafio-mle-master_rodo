@@ -3,6 +3,8 @@ name: 'Continuous Integration'
 on:
   pull_request:
     branches: [dev, stage, main]
+  push:
+    branches: [dev, stage, main]
 
 jobs:
   model-tests:
@@ -33,7 +35,7 @@ jobs:
             
       - name: Install dependencies
         run: |
-          uv sync --dev
+          uv sync --all-extras
           
       - name: Run model tests
         run: |
@@ -76,7 +78,7 @@ jobs:
             
       - name: Install dependencies
         run: |
-          uv sync --dev
+          uv sync --all-extras
           
       - name: Run API tests
         run: |
@@ -94,7 +96,7 @@ jobs:
   stress-tests:
     name: 'Stress Tests'
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'run-stress-tests')
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'run-stress-tests'))
     
     steps:
       - name: Checkout code
@@ -120,7 +122,7 @@ jobs:
             
       - name: Install dependencies
         run: |
-          uv sync --dev
+          uv sync --all-extras
           
       - name: Run stress tests
         run: |
