@@ -52,6 +52,12 @@ That's enough for a localhost version. We can now start deploying this API to CG
 
 Then, I worked on deploying to GCP. I created an account with my personal e-mail, I set up a new project with billing activated. I asked an agent to generate templates to easily connect to my project and deploy. I had to debug a couple details. After a while, I managed to build a docker image locally and push it to Google Cloud Run. I ran the stress test, and after solving a couple dependency problems, it worked.
 
+To make it easier to destroy everything after you review the challenge, I implemented an IaC terraform folder to set up the whole infrastructure. I made it vary quick and messy because of time, so there might be security cncerns that I would check much more on a real case, but now I don´t have much time to keep working on this challenge. 
+
+After that, I started testing my CI/CD workflow, debuging a lot of problems.
+
+To save time, I added the public csv to Git LFS, but with more time, I would use the version I uploaded to my bucket.
+
 ## Model choice
 
 Depending on the business objective, it could be more important to identify as many positives as posible (delayed flights), or it could be more important to make sure our positive predictions are correct. My guess is that for this case, we care more about the first case, that means, we need a high recall. Depending on how much important is to minimize false negatives versus false positives, I would chose which F-Beta score to add to the table. Maybe F-2 or F-3 score could be good.
