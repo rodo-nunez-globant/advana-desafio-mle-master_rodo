@@ -84,6 +84,19 @@ resource "google_service_account_iam_binding" "self_impersonation" {
   ]
 }
 
+# Grant service account token creator role
+# This allows the service account to create OAuth2 tokens for itself
+resource "google_service_account_iam_binding" "token_creator" {
+  count = var.enable_self_impersonation ? 1 : 0
+
+  service_account_id = "projects/${var.project_id}/serviceAccounts/${var.service_account_email}"
+  role               = "roles/iam.serviceAccountTokenCreator"
+
+  members = [
+    local.service_account_member
+  ]
+}
+
 # Additional IAM roles if specified
 resource "google_project_iam_binding" "additional" {
   for_each = var.additional_roles
