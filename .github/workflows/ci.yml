@@ -1,0 +1,144 @@
+name: '🧪 Test and Validate Code'
+
+on:
+  pull_request:
+    branches: [dev, stage, main]
+  push:
+    branches: [dev, stage, main]
+
+jobs:
+  model-tests:
+    name: 'Model Tests'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+        
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+            
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+          
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('pyproject.toml', 'uv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
+            
+      - name: Install dependencies
+        run: |
+          uv sync --all-extras
+          
+      - name: Run model tests
+        run: |
+          make model-test
+          
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: model-test-results
+          path: |
+            reports/
+          retention-days: 30
+
+  api-tests:
+    name: 'API Tests'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+        
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+            
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+          
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('pyproject.toml', 'uv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
+            
+      - name: Install dependencies
+        run: |
+          uv sync --all-extras
+          
+      - name: Run API tests
+        run: |
+          make api-test
+          
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: api-test-results
+          path: |
+            reports/
+          retention-days: 30
+
+  stress-tests:
+    name: 'Stress Tests'
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'run-stress-tests'))
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+        
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+            
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+          
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/uv
+          key: ${{ runner.os }}-uv-${{ hashFiles('pyproject.toml', 'uv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
+            
+      - name: Install dependencies
+        run: |
+          uv sync --all-extras
+          
+      - name: Run stress tests
+        run: |
+          make stress-test
+          
+      - name: Upload stress test artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stress-test-results
+          path: |
+            reports/
+          retention-days: 30

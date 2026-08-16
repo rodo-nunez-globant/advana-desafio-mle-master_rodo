@@ -52,14 +52,19 @@ class DelayModel:
         if data.empty:
             raise ValueError("Input data is empty")
         
-        # Check if we have date columns (training data) or not (prediction data)
+        # Determine mode: training if target_column is provided, prediction otherwise
+        is_training_mode = target_column is not None
+        
+        # Check if we have date columns
         has_dates = all(col in data.columns for col in ['Fecha-I', 'Fecha-O'])
         
-        if has_dates:
-            # Training mode: require all columns
+        if is_training_mode:
+            # Training mode: require all columns including dates
             missing_columns = [col for col in self._required_columns if col not in data.columns]
             if missing_columns:
                 raise ValueError(f"Missing required columns: {missing_columns}")
+            if not has_dates:
+                raise ValueError("Date columns 'Fecha-I' and 'Fecha-O' are required for training")
         else:
             # Prediction mode: only need the categorical columns
             required_prediction_cols = ['OPERA', 'MES', 'TIPOVUELO']
@@ -70,8 +75,8 @@ class DelayModel:
         # Make a copy to avoid modifying original data
         data = data.copy()
         
-        # Process dates only if available (training mode)
-        if has_dates:
+        # Process dates only in training mode
+        if is_training_mode:
             # Convert date columns to datetime
             try:
                 data['Fecha-I'] = pd.to_datetime(data['Fecha-I'])
@@ -82,12 +87,11 @@ class DelayModel:
             # Calculate min_diff in minutes
             data['min_diff'] = (data['Fecha-O'] - data['Fecha-I']).dt.total_seconds() / 60
             
-            # Create target column if requested
-            if target_column is not None:
-                if target_column == self._target_col:
-                    data[self._target_col] = (data['min_diff'] > self._delay_threshold).astype(int)
-                else:
-                    raise ValueError(f"Invalid target_column: {target_column}")
+            # Create target column
+            if target_column == self._target_col:
+                data[self._target_col] = (data['min_diff'] > self._delay_threshold).astype(int)
+            else:
+                raise ValueError(f"Invalid target_column: {target_column}")
         
         # One-hot encode categorical variables (same for both modes)
         # OPERA (airline)
@@ -111,10 +115,8 @@ class DelayModel:
         # Ensure consistent column order
         features = features[self._features_cols]
         
-        # Return based on whether target was requested
-        if target_column is not None:
-            if not has_dates:
-                raise ValueError("Cannot create target without date columns")
+        # Return based on mode
+        if is_training_mode:
             target = data[[self._target_col]]
             return features, target
         else:

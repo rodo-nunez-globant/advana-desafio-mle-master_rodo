@@ -38,7 +38,7 @@ Docker Image → Container registry (on main merge)
 
 ### File Structure
 ```
-workflows/
+.github/workflows/
 ├── ci.yml          # Continuous Integration (testing)
 └── cd.yml          # Continuous Delivery (build on main)
 ```

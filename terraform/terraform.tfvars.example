@@ -1,0 +1,17 @@
+# GCP Project Configuration
+project_id = "rodo-nunez-challenge-latam"
+region     = "us-central1"
+
+# GitHub Repository Configuration
+# Format: owner/repository
+github_repo = "rodo-nunez-globant/advana-desafio-mle-master_rodo"
+
+# Optional: Override GitHub owner (extracted from repo if not provided)
+# github_owner = "rodo-nunez-globant"
+
+# Service Account Configuration (optional)
+# service_account_id = "github-actions"
+
+# Workload Identity Configuration (optional)
+# workload_identity_pool_id = "github-pool"
+# workload_identity_provider_id = "github-provider"
